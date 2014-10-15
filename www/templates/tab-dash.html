@@ -1,0 +1,140 @@
+<ion-view title="Dashboard">
+    <ion-content class="padding">
+        
+        <form name="new_art_form" ng-submit="createArtObject(artOb)" ng-controller="NewArtCtrl">
+            
+        <div class="list">
+            
+            <div class="item item-divider">
+                Required Fields
+            </div>
+            
+            <label class="item item-input">
+              <span class="input-label">Title:</span>
+              <input type="text" ng-model="artOb.title" name="title" required/>
+            </label>
+            <label class="item item-input">
+              <span class="input-label">Artist Name:</span>
+              <input type="text" ng-model="artOb.artist_name" name="artist_name" required/>
+            </label>
+            <label class="item item-input">
+              <span class="input-label">Medium:</span>
+              <input type="text" ng-model="artOb.medium" name="medium" required/>
+            </label>
+            <label class="item item-input">
+              <span class="input-label">Dimensions:</span>
+              <input type="text" ng-model="artOb.dimensions" name="dimensions" required/>
+            </label>
+            <label class="item item-input item-select">
+              <span class="input-label">Campus:</span>
+              <select ng-model="curSelection.campus"
+                      ng-init="curSelection.campus = campusList[0]"
+                      ng-options="loc for loc in campusList"
+                      ng-change="campusChange(curSelection.campus)"></select>
+            </label>
+            
+            <!-- INDOOR IS TOGGLE INPUT -->
+            <ion-toggle ng-model="artOb.indoor">Indoor:</ion-toggle>
+            
+            <label class="item item-input">
+              <span class="input-label">Type:</span>
+              <input type="text" ng-model="artOb.type" name="type" required/>
+            </label>
+            <label class="item item-input">
+              <span class="input-label">Shape:</span>
+              <input type="text" ng-model="artOb.shape" name="shape" required/>
+            </label>
+            <label class="item item-input">
+              <span class="input-label">Color:</span>
+              <input type="text" ng-model="artOb.color" name="color" required/>
+            </label>
+            
+            <!-- ART MOVEMENT TYPE MAY CHANGE -->
+            <label class="item item-input item-select">
+              <span class="input-label">Art Movement:</span>
+                
+              <!--<input type="text" ng-model="artOb.art_movement"/>-->
+              <select ng-model="curSelection.movement"
+                      ng-init="curSelection.movement = movementsList[0]"
+                      ng-options="move for move in movementsList"
+                      ng-change="movementChange(curSelection.movement)"></select>
+            </label>
+            
+            <!-- DESCRIPTION TYPE MAY CHANGE -->
+            <label class="item item-input">
+              <span class="input-label">Description:</span>
+              <input type="text" ng-model="artOb.description" name="description" required/>
+            </label>
+            
+            <!-- TAGS TYPE/STYLE MAY CHANGE -->
+            <label class="item item-input item-select">
+              <span class="input-label">Tags:</span>
+                
+              <!-- ng-options="[label] for [loop-variable] in [array]" -->
+              <select ng-model="curSelection.tags"
+                      ng-init="curSelection.tags = '--'"
+                      ng-options="tag for tag in tagsList"
+                      ng-change="addTag(curSelection.tags);curSelection.tags='--';"></select>
+                
+            </label>
+            
+            <div class="item button-bar">
+                <!--  col-10 -->
+                <a class="button col"
+                   ng-repeat="but in chosenTags track by $index"
+                   ng-click= "tagClick($index)">{{but}}</a>
+            </div>
+            
+            <div class="item item-divider"
+                 ng-click="moreOps=!moreOps"
+                 ng-init="moreOps=false">Optional Fields</div>
+            
+            <label class="item item-input" ng-show="moreOps">
+              <span class="input-label">Availability:</span>
+              <input type="text" ng-model="artOb.availability"/>
+            </label>
+            <label class="item item-input" ng-show="moreOps">
+              <span class="input-label">Artist PoB:</span>
+              <input type="text" ng-model="artOb.artist_pob"/>
+            </label>
+            
+            <!-- NEED TO MODIFY DATE OUTPUT FOR DATABASE -->
+            <!--
+            <label class="item item-input" ng-show="moreOps">
+              <span class="input-label">Artist DoB:</span>
+              <input type="text" ng-model="artOb.artist_dob"/>
+            </label>
+            -->
+            
+            <!-- NEED TO MODIFY DATE OUTPUT FOR DATABASE -->
+            <!--
+            <label class="item item-input" ng-show="moreOps">
+              <span class="input-label">Date Made:</span>
+              <input type="text" ng-model="artOb.date_made" placeholder="mm/dd/yyyy"/>
+            </label>
+            -->
+            
+            <label class="item item-input" ng-show="moreOps">
+              <span class="input-label">Artist Website:</span>
+              <input type="text" ng-model="artOb.artist_website"/>
+            </label>
+            <label class="item item-input" ng-show="moreOps">
+              <span class="input-label">Monetary Value:</span>
+              <input type="text" ng-model="artOb.mon_value"/>
+            </label>
+            <label class="item item-input" ng-show="moreOps">
+              <span class="input-label">Location Name:</span>
+              <input type="text" ng-model="artOb.location_name"/>
+            </label>
+        </div>
+        
+        <div class="padding">
+            <button type="submit" class="button button-block button-positive">
+              Submit
+            </button>
+        </div>
+            
+        </form>
+        
+    </ion-content>
+</ion-view>

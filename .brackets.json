@@ -1,0 +1,19 @@
+{
+    "jscodehints.detectedExclusions": [
+        "C:/Users/Owner/Documents/DASH_Projects/Login_Test/blank/platforms/android/assets/www/lib/ionic/js/angular-ui/angular-ui-router.min.js",
+        "C:/Users/Owner/Documents/DASH_Projects/Login_Test/blank/www/lib/lodash/dist/lodash.underscore.min.js",
+        "C:/Users/Owner/Documents/DASH_Projects/Login_Test/blank/gulpfile.js",
+        "C:/Users/Owner/Documents/DASH_Projects/Login_Test/blank/www/lib/restangular/karma.underscore.conf.js",
+        "C:/Users/Owner/Documents/DASH_Projects/Login_Test/blank/www/lib/restangular/karma.conf.js",
+        "C:/Users/Owner/Documents/DASH_Projects/Login_Test/blank/www/lib/restangular/Gruntfile.js",
+        "C:/Users/Owner/Documents/DASH_Projects/Login_Test/blank/www/lib/restangular/test/restangularSpec.js",
+        "C:/Users/Owner/Documents/DASH_Projects/Login_Test/blank/www/lib/restangular/src/restangular.js",
+        "C:/Users/Owner/Documents/DASH_Projects/Login_Test/blank/www/lib/restangular/dist/restangular.min.js",
+        "C:/Users/Owner/Documents/DASH_Projects/Login_Test/blank/www/js/services.js",
+        "C:/Users/Owner/Documents/DASH_Projects/Login_Test/blank/www/lib/ionic/js/ionic-angular.js",
+        "C:/Users/Owner/Documents/DASH_Projects/Login_Test/blank/www/lib/ionic/js/ionic-angular.min.js",
+        "C:/Users/Owner/Documents/DASH_Projects/Login_Test/blank/www/lib/ionic/js/ionic.bundle.js",
+        "C:/Users/Owner/Documents/DASH_Projects/Login_Test/blank/www/lib/ionic/js/ionic.bundle.min.js",
+        "C:/Users/Owner/Documents/DASH_Projects/Login_Test/blank/www/js/controllers.js"
+    ]
+}
