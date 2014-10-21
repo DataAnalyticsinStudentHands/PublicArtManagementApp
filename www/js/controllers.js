@@ -1,6 +1,8 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function ($scope, UtilFactory, $ionicPopup, $timeout, ArtObjectFactory) {
+.controller('DashCtrl', function ($scope, UtilFactory, $ionicPopup, $timeout, ArtObjectFactory, ngNotify, $filter) {
+    
+    $scope.artOb = {};
     
     $scope.curSelection = {};
     
@@ -228,6 +230,30 @@ angular.module('starter.controllers', [])
         return false;
     }
     
+    $scope.openDatePicker = function (title, target) {
+        $scope.data = {};
+
+        var datePopup = $ionicPopup.show({
+            template: '<datetimepicker data-ng-model="data.newDate" data-datetimepicker-config="{ startView:\'year\', minView:\'day\' }"></datetimepicker>',
+            title: title,
+            scope: $scope,
+            buttons: [
+                {
+                    text: 'Cancel'
+                },
+                {
+                    text: '<b>Save</b>',
+                    type: 'button-positive',
+                    onTap: function (e) {
+                        var test = $filter('date')($scope.data.newDate, 'yyyy/MM/dd');
+                        //$scope.myapplication[acType] = test;
+                        $scope.artOb[target] = test;
+                    }
+                }
+            ]
+        });
+    };
+    
 })
 
     
@@ -255,11 +281,12 @@ angular.module('starter.controllers', [])
 })
 
 // Nested in DashCtrl
-.controller('NewArtCtrl', function($scope,UtilFactory){
-    
+.controller('NewArtCtrl', function($scope,$ionicPopup,$filter,UtilFactory,ngNotify){
     
     $scope.createArtObject = function (artOb) {
-
+    
+        var errorStack = [];
+        
         if (artOb) {
 
             artOb.location_lat = 0;
@@ -268,19 +295,39 @@ angular.module('starter.controllers', [])
             
             /*** UtilFactory.tagsToStr($scope.chosenTags) will stringify chosenTags ***/
             artOb.tags = UtilFactory.tagsToStr($scope.chosenTags);
-            console.log(artOb.tags);
+            //console.log(artOb.tags);
             
             artOb.art_movement = $scope.curSelection.movement;
             
             artOb.location_campus = $scope.curSelection.campus;
         }
         
+        
+        
         /********************
             VALIDATE HERE
         ********************/
         
         
+        if(artOb.art_movement=="--" || artOb.location_campus=="--" || artOb.tags==""){
+            
+            if(artOb.art_movement=="--"||artOb.location_campus=="--")
+                errorStack.push("Required drop-down fields blank");
+            
+            if(artOb.tags=="")
+                errorStack.push("No tags selected");
+            
+            $scope.selectValid = false;
+            $scope.selectInvalid = true;
+        }
+        else{
+            
+            $scope.selectValid = true;
+            $scope.selectInvalid = false;
+        }
         
+        
+        // RESTAngular Stuff, disabled until validation complete
         /*
         var testProm = $scope.Restangular().all('artobjects').getList('',{Authorization:'Basic VXNlcjp0ZXN0'});
         testProm.then(function(success){
@@ -293,11 +340,80 @@ angular.module('starter.controllers', [])
         });
         */
         
-        
-        
-        
-        //console.log($scope.new_art_form.title.$dirty);
-        //console.log("SUBMIT SUCCESSFUL");
-        console.log($scope.new_art_form.title.$error.pattern);
+        // If date pattern matches OR date is empty, pattern error will be false
+        if($scope.new_art_form.$valid && $scope.selectValid && !$scope.new_art_form.artist_dob.$error.pattern &&
+           !$scope.new_art_form.date_made.$error.pattern){
+            
+            $scope.data = {}
+
+            // An elaborate, custom popup
+            var myPopup = $ionicPopup.show({
+                template: '<ul class="list"><li class="item" ng-repeat="(key,value) in artOb"><div>{{key + ": " + value}}</div></li></ul>',
+                title: "",
+                subTitle: "",
+                scope: $scope,
+                buttons: [
+                    {
+                        text: 'Cancel'
+                    },
+                    {
+                        text: '<b>Ok</b>',
+                        type: 'button-positive',
+                        onTap: function (e) {
+                                
+                            if (!$scope.data.popVar) {
+                                //don't allow the user to close unless he enters input
+                                e.preventDefault();
+                            } else {
+                                return $scope.data.popVar;
+                            }
+                        }
+                    }
+                ]
+            });
+
+        myPopup.then(function(res){
+            
+            console.log(res);
+        });
+            // Possibly allow user to review before submission
+        }
+        else{
+            
+            // Alert user via popup about empty fields
+            // Or improper date format
+            var reqError = $scope.new_art_form.$error.required;
+            var dateError = $scope.new_art_form.$error.pattern;
+            
+            if(reqError){
+                
+                /*for(var i=0;i<reqError.length;i++){
+                    
+                    reqString += reqError[i].$name + '\n';
+                }*/
+                    
+                //reqString += reqError[0].$name + '\n';
+                
+                errorStack.push("Required textfields left blank");
+            }
+            
+            if(dateError){
+                
+                /*for(var i=0;i<dateError.length;i++){
+                    
+                    dateString += dateError[i].$name + '\n';
+                }*/
+                    
+                //dateString += dateError[0].$name + '\n';
+                
+                errorStack.push("Date not in yyyy/mm/dd format");
+            }
+            
+            console.log(errorStack[0]);
+            ngNotify.set(errorStack[0], {
+                position: 'bottom',
+                type: 'error'
+            });
+        }
     }
 });
