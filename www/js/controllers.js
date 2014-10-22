@@ -281,7 +281,7 @@ angular.module('starter.controllers', [])
 })
 
 // Nested in DashCtrl
-.controller('NewArtCtrl', function($scope,$ionicPopup,$filter,UtilFactory,ngNotify){
+.controller('NewArtCtrl', function($scope,$state,$ionicPopup,$filter,UtilFactory,ngNotify){
     
     $scope.createArtObject = function (artOb) {
     
@@ -348,8 +348,8 @@ angular.module('starter.controllers', [])
 
             // An elaborate, custom popup
             var myPopup = $ionicPopup.show({
-                template: '<ul class="list"><li class="item" ng-repeat="(key,value) in artOb"><div>{{key + ": " + value}}</div></li></ul>',
-                title: "",
+                template: '<ul class="list"><li class="item item-text-wrap" ng-repeat="(key,value) in artOb"><span class="input-label">{{key}}:</span><div>{{value}}</div></li></ul>',
+                title: "<b>Review Submission</b>",
                 subTitle: "",
                 scope: $scope,
                 buttons: [
@@ -357,25 +357,21 @@ angular.module('starter.controllers', [])
                         text: 'Cancel'
                     },
                     {
-                        text: '<b>Ok</b>',
+                        text: '<b>Submit</b>',
                         type: 'button-positive',
                         onTap: function (e) {
                                 
-                            if (!$scope.data.popVar) {
-                                //don't allow the user to close unless he enters input
-                                e.preventDefault();
-                            } else {
-                                return $scope.data.popVar;
-                            }
+                            console.log($scope.artOb);
+                            $state.go('tab.friends');
                         }
                     }
                 ]
             });
 
-        myPopup.then(function(res){
+            myPopup.then(function(){
             
-            console.log(res);
-        });
+                // Placeholder stuff
+            });
             // Possibly allow user to review before submission
         }
         else{
@@ -387,24 +383,10 @@ angular.module('starter.controllers', [])
             
             if(reqError){
                 
-                /*for(var i=0;i<reqError.length;i++){
-                    
-                    reqString += reqError[i].$name + '\n';
-                }*/
-                    
-                //reqString += reqError[0].$name + '\n';
-                
                 errorStack.push("Required textfields left blank");
             }
             
             if(dateError){
-                
-                /*for(var i=0;i<dateError.length;i++){
-                    
-                    dateString += dateError[i].$name + '\n';
-                }*/
-                    
-                //dateString += dateError[0].$name + '\n';
                 
                 errorStack.push("Date not in yyyy/mm/dd format");
             }
