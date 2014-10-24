@@ -43,7 +43,7 @@ angular.module('starter', ['ionic',
     })
 
     // setup an abstract state for the tabs directive
-    .state('tab', {
+    /*.state('tab', {
         url: "/tab",
         abstract: true,
         templateUrl: "templates/tabs.html"
@@ -88,8 +88,20 @@ angular.module('starter', ['ionic',
                 controller: 'AccountCtrl'
             }
         }
-    });
+    });*/
 
+    .state('main', {
+        url: '/main',
+        templateUrl: 'templates/main.html',
+        controller: 'MainCtrl'
+    })
+    
+    .state('edit', {
+        url: '/edit/:objectId',
+        templateUrl: 'templates/tab-dash.html',
+        controller: 'DashCtrl'
+    })
+    
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/login');
 

@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function ($scope, UtilFactory, $ionicPopup, $timeout, ArtObjectFactory, ngNotify, $filter) {
+.controller('DashCtrl', function ($scope, UtilFactory, $ionicPopup, $timeout, ArtObjectFactory, ngNotify, $filter, $stateParams, DBService) {
     
     $scope.artOb = {};
     
@@ -48,6 +48,11 @@ angular.module('starter.controllers', [])
 
     
     
+    
+    if($stateParams.objectId!=-1){
+        
+        $scope.artOb = DBService.getById($stateParams.objectId);
+    }
     
     
     
@@ -267,17 +272,47 @@ angular.module('starter.controllers', [])
 
 .controller('AccountCtrl', function ($scope) {})
 
-.controller('LoginCtrl', function ($scope, $state, LoginFactory) {
+.controller('LoginCtrl', function ($scope, $state, $timeout, LoginFactory, DBService) {
 
 
     $scope.signIn = function (user) {
 
         //if(LoginFactory.isValid(user)){
 
-        $state.go('tab.dash');
+        DBService.loadObjects();
+        
+        
+        // give enough time to load objects
+        $timeout(function(){
+            
+            $state.go('main');
+        }, 100);
         //}
     }
 
+})
+
+.controller('MainCtrl', function($scope, DBService){
+    
+    // RESTAngular Stuff, disabled until validation complete
+    
+    /*var testProm = $scope.Restangular().all('artobjects').getList('',{Authorization:'Basic VXNlcjp0ZXN0'});
+    testProm.then(function(success){
+        
+        $scope.artObjects = success; //console.log(success);
+    },
+    function(error){
+            
+        console.log('There was an error');
+    });*/
+    
+    $scope.artObjects = DBService.getObjects();
+})
+
+.controller('EditCtrl', function($scope,$state,$stateParams, DBService){
+    
+    $scope.object = DBService.getById($stateParams.objectId);
+    
 })
 
 // Nested in DashCtrl
@@ -348,7 +383,7 @@ angular.module('starter.controllers', [])
 
             // An elaborate, custom popup
             var myPopup = $ionicPopup.show({
-                template: '<ul class="list"><li class="item item-text-wrap" ng-repeat="(key,value) in artOb"><span class="input-label">{{key}}:</span><div>{{value}}</div></li></ul>',
+                template: '<ul class="list"><li class="item item-text-wrap" ng-repeat="(key,value) in artOb.plain()"><span class="input-label">{{key}}:</span><div>{{value}}</div></li></ul>',
                 title: "<b>Review Submission</b>",
                 subTitle: "",
                 scope: $scope,

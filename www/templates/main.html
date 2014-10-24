@@ -1,0 +1,12 @@
+<ion-view title="Main">
+    <ion-content class="padding">
+    <div class="list">
+        <ion-item type="item-text-wrap" href="#/edit/-1">
+            <u>New Object</u>
+        </ion-item>
+        <ion-item ng-repeat="object in artObjects" type="item-text-wrap" href="#/edit/{{object.artwork_id}}">
+            <b>{{object.title}}</b> by {{object.artist_name}}
+        </ion-item>
+    </div>
+    </ion-content>
+</ion-view>

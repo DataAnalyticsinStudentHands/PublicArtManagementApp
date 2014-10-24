@@ -102,4 +102,46 @@ angular.module('starter.services', [])
             return outStr;
         }
     }
+})
+
+.service('DBService', function(Restangular){
+    
+    var artObjects;
+    
+    this.loadObjects = function(){
+        
+        testProm = Restangular.all('artobjects').getList('',{Authorization:'Basic VXNlcjp0ZXN0'});
+        testProm.then(function(success){
+        
+            artObjects = success; //console.log(success);
+        },
+        function(error){
+            
+            console.log('There was an error');
+        });
+    }
+    
+    this.getObjects = function(){
+        
+        return artObjects;
+    }
+    
+    this.getById = function(id){
+        
+        temp = artObjects.filter(function(element) {
+            return element.artwork_id == id;
+        });
+        
+        return temp[0];
+    }
+    
+    this.updateById = function(id){
+        
+        //update art objects in database by ID
+    }
+    
+    this.updateObjects = function(){
+        
+        //update all objects in database
+    }
 });
