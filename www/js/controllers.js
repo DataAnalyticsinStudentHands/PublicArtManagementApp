@@ -6,6 +6,8 @@ angular.module('starter.controllers', [])
     
     $scope.curSelection = {};
     
+    $scope.chosenTags = [];
+    
     $scope.tagsList = [
 
         '--',
@@ -14,10 +16,6 @@ angular.module('starter.controllers', [])
         'Orientation',
         'Central'
     ];
-    
-    /*** Populate tagsList here, [Custom] must be last ***/
-    $scope.tagsList.push('[Custom]');
-    $scope.chosenTags = [];
     
     
     $scope.movementsList = [
@@ -31,8 +29,7 @@ angular.module('starter.controllers', [])
         'Land'
     ];
     
-    /*** Populate movementsList here, [Custom] must be last ***/
-    $scope.movementsList.push('[Custom]');
+    
     
     $scope.campusList = [
         
@@ -43,20 +40,44 @@ angular.module('starter.controllers', [])
         'Clear Lake'
     ];
     
-    /*** Populate movementsList here, [Custom] must be last ***/
-    $scope.campusList.push('[Custom]');
-
     
+    // Set default to "--", may be overwritten below
+    $scope.curSelection.movement = $scope.movementsList[0];
+    $scope.curSelection.campus = $scope.campusList[0];
     
-    
+    // Add strings to lists if editing, that is, if not new object
     if($stateParams.objectId!=-1){
         
         $scope.artOb = DBService.getById($stateParams.objectId);
+        
+        if(!UtilFactory.strPresent($scope.movementsList,$scope.artOb.art_movement)){
+           
+            $scope.movementsList.push($scope.artOb.art_movement);
+        }
+        
+        if(!UtilFactory.strPresent($scope.campusList,$scope.artOb.location_campus)){
+           
+            $scope.campusList.push($scope.artOb.location_campus);
+        }
+        
+        $scope.curSelection.movement = $scope.artOb.art_movement;
+        $scope.curSelection.campus = $scope.artOb.location_campus;
+        if($scope.artOb.tags){
+            
+            $scope.chosenTags = $scope.artOb.tags.split(",");
+        }
     }
     
+    /*** Populate tagsList here, [Custom] must be last ***/
+    $scope.tagsList.push('[Custom]');
+    
+    /*** Populate movementsList here, [Custom] must be last ***/
+    $scope.movementsList.push('[Custom]');
+    
+    /*** Populate campusList here, [Custom] must be last ***/
+    $scope.campusList.push('[Custom]');    
     
     
-
     $scope.addTag = function (tag) {
 
         //DON'T FORGET TO ADD VALIDATION
@@ -278,15 +299,9 @@ angular.module('starter.controllers', [])
     $scope.signIn = function (user) {
 
         //if(LoginFactory.isValid(user)){
-
-        DBService.loadObjects();
         
+        $state.go('main');
         
-        // give enough time to load objects
-        $timeout(function(){
-            
-            $state.go('main');
-        }, 100);
         //}
     }
 
@@ -294,19 +309,23 @@ angular.module('starter.controllers', [])
 
 .controller('MainCtrl', function($scope, DBService){
     
-    // RESTAngular Stuff, disabled until validation complete
+    var obs = DBService.getObjects();
     
-    /*var testProm = $scope.Restangular().all('artobjects').getList('',{Authorization:'Basic VXNlcjp0ZXN0'});
-    testProm.then(function(success){
+    if(obs.length!=null && obs.length!=0){
         
-        $scope.artObjects = success; //console.log(success);
-    },
-    function(error){
+        $scope.artObjects = DBService.getObjects();
+    }
+    else{
+        
+        DBService.loadObjects().then(function(success){
             
-        console.log('There was an error');
-    });*/
-    
-    $scope.artObjects = DBService.getObjects();
+            $scope.artObjects = success;
+        },
+        function(fail){
+            
+            
+        });
+    }
 })
 
 .controller('EditCtrl', function($scope,$state,$stateParams, DBService){

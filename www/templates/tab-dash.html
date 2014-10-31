@@ -31,7 +31,6 @@
             <label class="item item-input item-select">
               <span class="input-label">Campus:</span>
               <select ng-model="curSelection.campus"
-                      ng-init="curSelection.campus = campusList[0]"
                       ng-options="loc for loc in campusList"
                       ng-change="campusChange(curSelection.campus)"></select>
             </label>
@@ -58,7 +57,6 @@
                 
               <!--<input type="text" ng-model="artOb.art_movement"/>-->
               <select ng-model="curSelection.movement"
-                      ng-init="curSelection.movement = movementsList[0]"
                       ng-options="move for move in movementsList"
                       ng-change="movementChange(curSelection.movement)"></select>
             </label>
@@ -109,7 +107,7 @@
                      placeholder="yyyy/mm/dd"
                      ng-pattern='/^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/'
                      name="artist_dob"
-                     ng-click="openDatePicker('TestingTesting','artist_dob')"/>
+                     ng-click="openDatePicker('Artist\'s Date of Birth','artist_dob')"/>
             </label>
             
             <!-- NEED TO MODIFY DATE OUTPUT FOR DATABASE -->
@@ -120,7 +118,7 @@
                      placeholder="yyyy/mm/dd"
                      ng-pattern='/^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/'
                      name="date_made"
-                     ng-click="openDatePicker('TestingTesting','date_made')"/>
+                     ng-click="openDatePicker('Date Made','date_made')"/>
             </label>
             
             <label class="item item-input" ng-show="moreOps">

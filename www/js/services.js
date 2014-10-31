@@ -100,30 +100,59 @@ angular.module('starter.services', [])
             }
             
             return outStr;
+        },
+        strPresent: function(list,key){
+                
+            for(var i=0;i<list.length;i++){
+                    
+                if(list[i].toLowerCase()==key.toLowerCase()){
+                        
+                    return true;
+                }
+            }
+            
+            return false;
         }
     }
 })
 
 .service('DBService', function(Restangular){
     
-    var artObjects;
+    var artObjects = {};
     
     this.loadObjects = function(){
         
         testProm = Restangular.all('artobjects').getList('',{Authorization:'Basic VXNlcjp0ZXN0'});
         testProm.then(function(success){
         
-            artObjects = success; //console.log(success);
+            artObjects = success;
+            
+            for(var i=0;i<artObjects.length;i++){
+                
+                if(artObjects[i].date_made && artObjects[i].date_made){
+                    
+                    var dob = (new Date(artObjects[i].artist_dob));
+                    var made = (new Date(artObjects[i].date_made));
+                    
+                    artObjects[i].date_made = made.getFullYear()+"/"+made.getMonth()+"/"+made.getDate();
+                    artObjects[i].artist_dob = dob.getFullYear()+"/"+dob.getMonth()+"/"+dob.getDate();
+                }
+            }
         },
         function(error){
             
             console.log('There was an error');
         });
+        
+        return testProm;
     }
     
     this.getObjects = function(){
         
-        return artObjects;
+        if(artObjects.length == 0)
+            return null;
+        else
+            return artObjects;
     }
     
     this.getById = function(id){
