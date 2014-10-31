@@ -416,7 +416,6 @@ angular.module('starter.controllers', [])
                         onTap: function (e) {
                                 
                             console.log($scope.artOb);
-                            $state.go('tab.friends');
                         }
                     }
                 ]
@@ -424,9 +423,17 @@ angular.module('starter.controllers', [])
 
             myPopup.then(function(){
             
-                // Placeholder stuff
+                if($scope.artOb.id){
+                    
+                    $scope.Restangular().one('artobjects',$scope.artOb.id).post($scope.artOb,'',{Authorization:'Basic VXNlcjp0ZXN0'});
+                }
+                else{
+                    
+                    $scope.Restangular().all('artobjects').post($scope.artOb,'',{Authorization:'Basic VXNlcjp0ZXN0'});
+                }
+                
+                $state.go('main');
             });
-            // Possibly allow user to review before submission
         }
         else{
             
