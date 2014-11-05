@@ -271,7 +271,7 @@ angular.module('starter.controllers', [])
                     text: '<b>Save</b>',
                     type: 'button-positive',
                     onTap: function (e) {
-                        var test = $filter('date')($scope.data.newDate, 'yyyy/MM/dd');
+                        var test = $filter('date')($scope.data.newDate, 'yyyy-MM-dd');
                         //$scope.myapplication[acType] = test;
                         $scope.artOb[target] = test;
                     }
@@ -380,19 +380,12 @@ angular.module('starter.controllers', [])
             $scope.selectInvalid = false;
         }
         
-        
-        // RESTAngular Stuff, disabled until validation complete
-        /*
-        var testProm = $scope.Restangular().all('artobjects').getList('',{Authorization:'Basic VXNlcjp0ZXN0'});
-        testProm.then(function(success){
-        
-            console.log(success);
-        },
-        function(error){
+        if(artOb.plain){
             
-            console.log('There was an error');
-        });
-        */
+            artOb = artOb.plain();
+            $scope.artOb = $scope.artOb.plain();
+        }
+        
         
         // If date pattern matches OR date is empty, pattern error will be false
         if($scope.new_art_form.$valid && $scope.selectValid && !$scope.new_art_form.artist_dob.$error.pattern &&
@@ -402,7 +395,7 @@ angular.module('starter.controllers', [])
 
             // An elaborate, custom popup
             var myPopup = $ionicPopup.show({
-                template: '<ul class="list"><li class="item item-text-wrap" ng-repeat="(key,value) in artOb.plain()"><span class="input-label">{{key}}:</span><div>{{value}}</div></li></ul>',
+                template: '<ul class="list"><li class="item item-text-wrap" ng-repeat="(key,value) in artOb"><span class="input-label">{{key}}:</span><div>{{value}}</div></li></ul>',
                 title: "<b>Review Submission</b>",
                 subTitle: "",
                 scope: $scope,
@@ -416,23 +409,26 @@ angular.module('starter.controllers', [])
                         onTap: function (e) {
                                 
                             console.log($scope.artOb);
+                            return true;
                         }
                     }
                 ]
             });
 
-            myPopup.then(function(){
+            myPopup.then(function(success){
             
-                if($scope.artOb.id){
+                if(success){
+                if($scope.artOb.artwork_id){
                     
-                    $scope.Restangular().one('artobjects',$scope.artOb.id).post($scope.artOb,'',{Authorization:'Basic VXNlcjp0ZXN0'});
+$scope.Restangular().all('artobjects').all($scope.artOb.artwork_id).post($scope.artOb,'',{Authorization:'Basic QWRtaW46dGVzdA=='});
                 }
                 else{
                     
-                    $scope.Restangular().all('artobjects').post($scope.artOb,'',{Authorization:'Basic VXNlcjp0ZXN0'});
+                    $scope.Restangular().all('artobjects').post($scope.artOb,'',{Authorization:'Basic QWRtaW46dGVzdA=='});
                 }
                 
                 $state.go('main');
+                }
             });
         }
         else{
@@ -449,7 +445,7 @@ angular.module('starter.controllers', [])
             
             if(dateError){
                 
-                errorStack.push("Date not in yyyy/mm/dd format");
+                errorStack.push("Date not in yyyy-mm-dd format");
             }
             
             console.log(errorStack[0]);

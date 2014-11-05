@@ -1,10 +1,13 @@
 <ion-view title="Main">
     <ion-content class="padding">
-    <div class="list">
+    <div class="list" show-delete="1">
         <ion-item type="item-text-wrap" href="#/edit/-1">
             <u>New Object</u>
         </ion-item>
-        <ion-item ng-repeat="object in artObjects" type="item-text-wrap" href="#/edit/{{object.artwork_id}}">
+        <ion-item ng-repeat="object in artObjects"
+                  type="item-text-wrap"
+                  href="#/edit/{{object.artwork_id}}">
+            <ion-delete-button class="ion-minus-circled"></ion-delete-button>
             <b>{{object.title}}</b> by {{object.artist_name}}
         </ion-item>
     </div>

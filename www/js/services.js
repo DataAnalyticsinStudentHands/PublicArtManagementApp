@@ -122,7 +122,7 @@ angular.module('starter.services', [])
     
     this.loadObjects = function(){
         
-        testProm = Restangular.all('artobjects').getList('',{Authorization:'Basic VXNlcjp0ZXN0'});
+        testProm = Restangular.all('artobjects').getList('',{Authorization:'Basic QWRtaW46dGVzdA=='});
         testProm.then(function(success){
         
             artObjects = success;

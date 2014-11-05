@@ -60,13 +60,10 @@ angular.module('starter', ['ionic',
 })
 
 .run(['Restangular', '$rootScope', '$state', function(Restangular, $rootScope, $state) {
-//    Restangular.setBaseUrl("http://localhost:8080/VolunteerApp/"); //THE LOCAL HOST
-//    Restangular.setBaseUrl("http://172.27.219.120:8080/VolunteerApp/"); //THE MAC AT CARL'S DESK
-//    Restangular.setBaseUrl("http://172.25.80.82:8080/VolunteerApp/"); //CARL'S LAPTOP
-//    Restangular.setBaseUrl("http://www.housuggest.org:8888/VolunteerApp/"); //HOUSUGGEST FOR VMA CORE
-    Restangular.setBaseUrl("http://localhost:8080/ArtApp/"); //TIM'S LAPTOP
+
+    Restangular.setBaseUrl("http://localhost:8080/ArtApp/"); //Local Host
         
-    //TO ACCESS RESTANGULAR IN CONTROLLARS WITHOUT INJECTION
+    //TO ACCESS RESTANGULAR IN CONTROLLERS WITHOUT INJECTION
     $rootScope.Restangular = function() {
         return Restangular;
     }
