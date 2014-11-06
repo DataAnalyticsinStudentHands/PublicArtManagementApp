@@ -119,6 +119,7 @@ angular.module('starter.services', [])
 .service('DBService', function(Restangular){
     
     var artObjects = {};
+    var needUpdate = false;
     
     this.loadObjects = function(){
         
@@ -138,6 +139,8 @@ angular.module('starter.services', [])
                     artObjects[i].artist_dob = dob.getFullYear()+"/"+dob.getMonth()+"/"+dob.getDate();
                 }
             }
+            
+            needUpdate = false;
         },
         function(error){
             
@@ -171,13 +174,22 @@ angular.module('starter.services', [])
     
     this.addObject = function(object){
         
-        Restangular.all('artobjects').post(object,'',{Authorization:'Basic QWRtaW46dGVzdA=='});
-        
-        return this.loadObjects();
+        needUpdate = true;
+        return Restangular.all('artobjects').post(object,'',{Authorization:'Basic QWRtaW46dGVzdA=='});
     }
     
     this.deleteById = function(id){
         
         Restangular.all('artobjects').all(id).remove('',{Authorization:'Basic QWRtaW46dGVzdA=='});
+    }
+    
+    this.needUpdate = function(){
+        
+        return needUpdate;
+    }
+    
+    this.setNeedUpdate = function(need){
+        
+        needUpdate = need;
     }
 });

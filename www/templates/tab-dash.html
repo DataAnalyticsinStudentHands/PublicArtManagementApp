@@ -1,11 +1,11 @@
 <ion-view title="Dashboard">
     
-    <!--<ion-header-bar align-title="center" class="bar-stable">
+    <ion-header-bar align-title="center" class="bar-stable">
         <div class="buttons">
-            <button class="button" ng-click="backToMain()">Back</button>
+            <a class="button" href="#/main">Back</a>
         </div>
         <h1 class="title">{{artOb.title ? artOb.title : "New Object"}}</h1>
-    </ion-header-bar>-->
+    </ion-header-bar>
     
     <ion-content class="padding">
         
@@ -73,6 +73,26 @@
             <label class="item item-input">
               <span class="input-label">Description:</span>
               <input type="text" ng-model="artOb.description" name="description" required/>
+            </label>
+            
+            <!-- LATITUDE -->
+            <label class="item item-input">
+              <span class="input-label">Latitude:</span>
+              <input type="text"
+                     ng-model="artOb.location_lat"
+                     name="latitude"
+                     ng-pattern='/^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?)$/'
+                     required/>
+            </label>
+            
+            <!-- LONGITUDE -->
+            <label class="item item-input">
+              <span class="input-label">Longitude:</span>
+              <input type="text"
+                     ng-model="artOb.location_long"
+                     name="longitude"
+                     ng-pattern='/\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)/'
+                     required/>
             </label>
             
             <!-- TAGS TYPE/STYLE MAY CHANGE -->

@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function ($scope, UtilFactory, $ionicPopup, $timeout, ArtObjectFactory, ngNotify, $filter, $stateParams, DBService) {
+.controller('DashCtrl', function ($scope, UtilFactory, $ionicPopup, $timeout, ArtObjectFactory, $filter, $stateParams, DBService) { //ngNotify,
     
     $scope.artOb = {};
     
@@ -301,7 +301,7 @@ angular.module('starter.controllers', [])
     $scope.showDel = false;
     var obs = DBService.getObjects();
     
-    if(obs.length!=null && obs.length!=0){
+    if(obs.length!=null && obs.length!=0 && !DBService.needUpdate){
         
         $scope.artObjects = DBService.getObjects();
     }
@@ -310,6 +310,7 @@ angular.module('starter.controllers', [])
         DBService.loadObjects().then(function(success){
             
             $scope.artObjects = success;
+            DBService.setNeedUpdate(false);
         },
         function(fail){
             
@@ -346,7 +347,7 @@ angular.module('starter.controllers', [])
 })
 
 // Nested in DashCtrl
-.controller('NewArtCtrl', function($scope,$state,$ionicPopup,$filter,UtilFactory,ngNotify,DBService){
+.controller('NewArtCtrl', function($scope,$state,$ionicPopup,$filter,UtilFactory,DBService){ //,ngNotify
     
     $scope.createArtObject = function (artOb) {
     
@@ -354,8 +355,8 @@ angular.module('starter.controllers', [])
         
         if (artOb) {
 
-            artOb.location_lat = 0;
-            artOb.location_long = 0;
+            //artOb.location_lat = 0;
+            //artOb.location_long = 0;
             artOb.image = 'image.png';
             
             /*** UtilFactory.tagsToStr($scope.chosenTags) will stringify chosenTags ***/
@@ -429,20 +430,23 @@ angular.module('starter.controllers', [])
             myPopup.then(function(success){
             
                 if(success){
-                if($scope.artOb.artwork_id){
+                    if($scope.artOb.artwork_id){
                     
 //$scope.Restangular().all('artobjects').all($scope.artOb.artwork_id).post($scope.artOb,'',{Authorization:'Basic QWRtaW46dGVzdA=='});
-                    DBService.updateById($scope.artOb);
-                }
-                else{
+                        DBService.updateById($scope.artOb);
+                        $state.go('main');
+                    }
+                    else{
                     
-                    //$scope.Restangular().all('artobjects').post($scope.artOb,'',{Authorization:'Basic QWRtaW46dGVzdA=='});
-                    DBService.addObject($scope.artOb);
+                        //$scope.Restangular().all('artobjects').post($scope.artOb,'',{Authorization:'Basic QWRtaW46dGVzdA=='});
+                            DBService.addObject($scope.artOb).then(function(res){
+                        
+                        
+                                $state.go('main');
+                            });
                     
-                    //Update client-side list
-                }
-                
-                $state.go('main');
+                            //Update client-side list
+                    }
                 }
             });
         }
@@ -460,14 +464,16 @@ angular.module('starter.controllers', [])
             
             if(dateError){
                 
-                errorStack.push("Date not in yyyy-mm-dd format");
+                errorStack.push("Date or Lat/Long format error");
             }
             
             console.log(errorStack[0]);
-            ngNotify.set(errorStack[0], {
+            
+            //DON'T FORGET TO RE-ENABLE NOTIFY
+            /*ngNotify.set(errorStack[0], {
                 position: 'bottom',
                 type: 'error'
-            });
+            });*/
         }
     }
 });
