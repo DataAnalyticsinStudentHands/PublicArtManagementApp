@@ -282,17 +282,6 @@ angular.module('starter.controllers', [])
     
 })
 
-    
-.controller('FriendsCtrl', function ($scope, Friends) {
-    $scope.friends = Friends.all();
-})
-
-.controller('FriendDetailCtrl', function ($scope, $stateParams, Friends) {
-    $scope.friend = Friends.get($stateParams.friendId);
-})
-
-.controller('AccountCtrl', function ($scope) {})
-
 .controller('LoginCtrl', function ($scope, $state, $timeout, LoginFactory, DBService) {
 
 
@@ -307,8 +296,9 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('MainCtrl', function($scope, DBService){
+.controller('MainCtrl', function($scope, $state, $ionicPopup, DBService){
     
+    $scope.showDel = false;
     var obs = DBService.getObjects();
     
     if(obs.length!=null && obs.length!=0){
@@ -326,16 +316,37 @@ angular.module('starter.controllers', [])
             
         });
     }
-})
+    
+    $scope.confirmDelete = function(inTitle,id,index){
+        
+        $scope.data = {}
 
-.controller('EditCtrl', function($scope,$state,$stateParams, DBService){
-    
-    $scope.object = DBService.getById($stateParams.objectId);
-    
+        // An elaborate, custom popup
+        var myPopup = $ionicPopup.confirm({
+            template: 'Delete \"'+inTitle+'?\"',
+            title: 'Confirm Deletion'
+        });
+
+        myPopup.then(function(res){
+            
+            if(res){
+                
+                //testProm = $scope.Restangular().all('artobjects').all(id).remove('',{Authorization:'Basic QWRtaW46dGVzdA=='});
+                
+                DBService.deleteById(id);
+                
+                $scope.artObjects.splice(index,1);
+            }
+            else{
+                
+                console.log(inTitle+" not deleted!");
+            }
+        });
+    }
 })
 
 // Nested in DashCtrl
-.controller('NewArtCtrl', function($scope,$state,$ionicPopup,$filter,UtilFactory,ngNotify){
+.controller('NewArtCtrl', function($scope,$state,$ionicPopup,$filter,UtilFactory,ngNotify,DBService){
     
     $scope.createArtObject = function (artOb) {
     
@@ -420,11 +431,15 @@ angular.module('starter.controllers', [])
                 if(success){
                 if($scope.artOb.artwork_id){
                     
-$scope.Restangular().all('artobjects').all($scope.artOb.artwork_id).post($scope.artOb,'',{Authorization:'Basic QWRtaW46dGVzdA=='});
+//$scope.Restangular().all('artobjects').all($scope.artOb.artwork_id).post($scope.artOb,'',{Authorization:'Basic QWRtaW46dGVzdA=='});
+                    DBService.updateById($scope.artOb);
                 }
                 else{
                     
-                    $scope.Restangular().all('artobjects').post($scope.artOb,'',{Authorization:'Basic QWRtaW46dGVzdA=='});
+                    //$scope.Restangular().all('artobjects').post($scope.artOb,'',{Authorization:'Basic QWRtaW46dGVzdA=='});
+                    DBService.addObject($scope.artOb);
+                    
+                    //Update client-side list
                 }
                 
                 $state.go('main');

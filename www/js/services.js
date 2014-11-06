@@ -164,13 +164,20 @@ angular.module('starter.services', [])
         return temp[0];
     }
     
-    this.updateById = function(id){
+    this.updateById = function(object){
         
-        //update art objects in database by ID
+        Restangular.all('artobjects').all(object.artwork_id).post(object,'',{Authorization:'Basic QWRtaW46dGVzdA=='});
     }
     
-    this.updateObjects = function(){
+    this.addObject = function(object){
         
-        //update all objects in database
+        Restangular.all('artobjects').post(object,'',{Authorization:'Basic QWRtaW46dGVzdA=='});
+        
+        return this.loadObjects();
+    }
+    
+    this.deleteById = function(id){
+        
+        Restangular.all('artobjects').all(id).remove('',{Authorization:'Basic QWRtaW46dGVzdA=='});
     }
 });
