@@ -107,7 +107,6 @@ angular.module('starter.controllers', [])
                     }
                 });
 
-
                 /**********************/
                 /*** END POPUP CODE ***/
                 /**********************/
@@ -282,21 +281,55 @@ angular.module('starter.controllers', [])
     
 })
 
-.controller('LoginCtrl', function ($scope, $state, $timeout, LoginFactory, DBService) {
+.controller('LoginCtrl', function ($scope, $state, $timeout, $ionicLoading, Auth, LoginFactory, DBService) {
 
 
-    $scope.signIn = function (user) {
-
-        //if(LoginFactory.isValid(user)){
-        
-        $state.go('main');
-        
-        //}
+    if($scope.isAuthenticated() === true) {
+         //IF SUCCESSFULLY AUTH-ED USER IS TRYING TO GO TO LOGIN PAGE => SEND TO HOME PAGE OF APP
+         $state.go('main');
     }
+    else{
+        
+        Auth.clearCredentials();
+    }
+    
+    $scope.user = {};
+     $scope.salt = "nfp89gpe"; //PENDING - NEED TO GET ACTUAL SALT
+     $scope.submit = function(name,pass) {
+         console.log("SUBMIT");
+         if ($scope.user.username && $scope.user.password) {
+             document.activeElement.blur();
+             $timeout(function() {
+                 $ionicLoading.show();
+                 $scope.passWordHashed = new String(CryptoJS.SHA512($scope.user.password + $scope.user.username + $scope.salt));
+                 Auth.setCredentials($scope.user.username, $scope.passWordHashed);
+                 $scope.user.username = '';
+                 $scope.user.password = '';
+                 $scope.loginResultPromise = $scope.Restangular().all("users").getList();//.all("myUser")
+                 $scope.loginResultPromise.then(function(result) {
+                    $scope.loginResult = result;
+                    $scope.loginMsg = "You have logged in successfully!";
+                    Auth.confirmCredentials();
+                    //$state.go("main", {}, {reload: true});
+                     $state.go("main");
+                    //ngNotify.set($scope.loginMsg, 'success');
+                    $ionicLoading.hide();
+                 }, function(error) {
+                    $scope.loginMsg = "Incorrect username or password.";
+                    //ngNotify.set($scope.loginMsg, {position: 'top', type: 'error'});
+                    Auth.clearCredentials();
+                    $ionicLoading.hide();
+                 });
+             }, 500);
+         } else {
+             $scope.loginMsg = "Please enter a username and password.";
+             //ngNotify.set($scope.loginMsg, {position: 'top', type: 'error'});
+         }
+     };
 
 })
 
-.controller('MainCtrl', function($scope, $state, $ionicPopup, DBService){
+.controller('MainCtrl', function($scope, Auth, $state, $ionicPopup, DBService){
     
     $scope.showDel = false;
     var obs = DBService.getObjects();
@@ -343,6 +376,12 @@ angular.module('starter.controllers', [])
                 console.log(inTitle+" not deleted!");
             }
         });
+    }
+    
+    $scope.logOut = function(){
+        
+        Auth.clearCredentials();
+        $state.go('login');
     }
 })
 

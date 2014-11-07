@@ -12,6 +12,7 @@ angular.module('starter', ['ionic',
                            'starter.services',
                            'restangular',
                            'ngNotify',
+                           'databaseServicesModule',
                            'ui.bootstrap.datetimepicker'
                           ]).run(function ($ionicPlatform) {
 
@@ -39,19 +40,22 @@ angular.module('starter', ['ionic',
     .state('login', {
         url: '/login',
         templateUrl: 'templates/login.html',
-        controller: 'LoginCtrl'
+        controller: 'LoginCtrl',
+        authenticate: false
     })
 
     .state('main', {
         url: '/main',
         templateUrl: 'templates/main.html',
-        controller: 'MainCtrl'
+        controller: 'MainCtrl',
+        authenticate: true
     })
     
     .state('edit', {
         url: '/edit/:objectId',
         templateUrl: 'templates/tab-dash.html',
-        controller: 'DashCtrl'
+        controller: 'DashCtrl',
+        authenticate: true
     })
     
     // if none of the above states are matched, use this as the fallback
@@ -59,7 +63,7 @@ angular.module('starter', ['ionic',
 
 })
 
-.run(['Restangular', '$rootScope', '$state', function(Restangular, $rootScope, $state) {
+.run(['Restangular', '$rootScope', '$state', 'Auth', function(Restangular, $rootScope, $state, Auth) {
 
     Restangular.setBaseUrl("http://localhost:8080/ArtApp/"); //Local Host
         
@@ -67,4 +71,20 @@ angular.module('starter', ['ionic',
     $rootScope.Restangular = function() {
         return Restangular;
     }
+    
+    $rootScope.isAuthenticated = function() {
+        return Auth.hasCredentials();
+    }
+    
+    $rootScope.$on("$stateChangeStart", function(event, toState, toParams, fromState, fromParams)     {
+      console.log("$stateChangeStart");
+      console.log($rootScope.isAuthenticated());
+      if (toState.authenticate && !$rootScope.isAuthenticated()){
+        console.log("non-authed");
+        // User isn’t authenticated
+        $state.go("login");
+        //What?
+        event.preventDefault(); 
+      } else console.log("authed");
+    });
 }]);
