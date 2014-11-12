@@ -3,7 +3,7 @@
     <ion-header-bar align-title="center" class="bar-stable">
         <div class="buttons">
             <a class="button" href="#/edit/-1">New</a>
-            <button class="button" ng-click="showDel=!showDel">Delete</button>
+            <button class="button" ng-click="showDel=!showDel;showOps=false">Delete</button>
         </div>
         <h1 class="title">Art Objects</h1>
         <div class="buttons">
@@ -12,15 +12,27 @@
     </ion-header-bar>
     
     <ion-content class="padding">
-    <ion-list show-delete="showDel">
-        <ion-item class="item" ng-repeat="object in artObjects"
-                  type="item-text-wrap"
-                  href="#/edit/{{object.artwork_id}}">
-            <ion-delete-button class="ion-minus-circled"
-                               ng-click="confirmDelete(object.title,object.artwork_id,$index)">
-            </ion-delete-button>
-            <b>{{object.title}}</b> by {{object.artist_name}}
-        </ion-item>
-    </ion-list>
+        <ion-list show-delete="showDel">
+            <div ng-repeat="object in artObjects">
+                <!--<ion-item class="item" 
+                          type="item-text-wrap"
+                          href="#/edit/{{object.artwork_id}}">-->
+                <ion-item class="item item-thumbnail-left" 
+                          type="item-text-wrap"
+                          ng-click="toggleOps($index)">
+                    <!--<img src="http://www.zooborns.com/.a/6a010535647bf3970b0192aa1c86c1970d-500wi">-->
+                    <img src="img/test_sloth_2.jpg">
+                    <ion-delete-button class="ion-minus-circled"
+                                    ng-click="confirmDelete(object.title,object.artwork_id,$index)">
+                    </ion-delete-button>
+                    <b>{{object.title}}</b> by {{object.artist_name}}
+                </ion-item>
+                <div class="button-bar" ng-show="showOps && $index==opIndex">
+                    <a class="button button-stable"
+                            href="#/edit/{{object.artwork_id}}"><b>Edit</b></a>
+                    <a class="button button-positive">Manage Images</a>
+                </div>
+            </div>
+        </ion-list>
     </ion-content>
 </ion-view>

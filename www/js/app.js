@@ -58,6 +58,13 @@ angular.module('starter', ['ionic',
         authenticate: true
     })
     
+    .state('imedit', {
+        url:'/imedit/:objectId',
+        templateUrl: 'templates/imedit.html',
+        controller: 'ImageCtrl',
+        authenticate: true
+    })
+    
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/login');
 

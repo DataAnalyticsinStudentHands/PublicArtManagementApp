@@ -332,6 +332,9 @@ angular.module('starter.controllers', [])
 .controller('MainCtrl', function($scope, Auth, $state, $ionicPopup, DBService){
     
     $scope.showDel = false;
+    $scope.showOps = false;
+    $scope.opIndex = -1;
+    
     var obs = DBService.getObjects();
     
     if(obs.length!=null && obs.length!=0 && !DBService.needUpdate){
@@ -383,6 +386,96 @@ angular.module('starter.controllers', [])
         Auth.clearCredentials();
         $state.go('login');
     }
+    
+    $scope.toggleOps = function(newInd){
+        
+        if(newInd == $scope.opIndex){
+            
+            $scope.showOps = !$scope.showOps;
+        }
+        else{
+            
+            $scope.showOps = true;
+            $scope.opIndex = newInd;
+        }
+    }
+})
+
+.controller('MainCtrl', function($scope, Auth, $state, $ionicPopup, DBService){
+    
+    $scope.showDel = false;
+    $scope.showOps = false;
+    $scope.opIndex = -1;
+    
+    var obs = DBService.getObjects();
+    
+    if(obs.length!=null && obs.length!=0 && !DBService.needUpdate){
+        
+        $scope.artObjects = DBService.getObjects();
+    }
+    else{
+        
+        DBService.loadObjects().then(function(success){
+            
+            $scope.artObjects = success;
+            DBService.setNeedUpdate(false);
+        },
+        function(fail){
+            
+            
+        });
+    }
+    
+    $scope.confirmDelete = function(inTitle,id,index){
+        
+        $scope.data = {}
+
+        // An elaborate, custom popup
+        var myPopup = $ionicPopup.confirm({
+            template: 'Delete \"'+inTitle+'?\"',
+            title: 'Confirm Deletion'
+        });
+
+        myPopup.then(function(res){
+            
+            if(res){
+                
+                //testProm = $scope.Restangular().all('artobjects').all(id).remove('',{Authorization:'Basic QWRtaW46dGVzdA=='});
+                
+                DBService.deleteById(id);
+                
+                $scope.artObjects.splice(index,1);
+            }
+            else{
+                
+                console.log(inTitle+" not deleted!");
+            }
+        });
+    }
+    
+    $scope.logOut = function(){
+        
+        Auth.clearCredentials();
+        $state.go('login');
+    }
+    
+    $scope.toggleOps = function(newInd){
+        
+        if(newInd == $scope.opIndex){
+            
+            $scope.showOps = !$scope.showOps;
+        }
+        else{
+            
+            $scope.showOps = true;
+            $scope.opIndex = newInd;
+        }
+    }
+})
+
+.controller('ImageCtrl', function($scope, $state, DBService){
+    
+    
 })
 
 // Nested in DashCtrl
@@ -394,13 +487,10 @@ angular.module('starter.controllers', [])
         
         if (artOb) {
 
-            //artOb.location_lat = 0;
-            //artOb.location_long = 0;
             artOb.image = 'image.png';
             
             /*** UtilFactory.tagsToStr($scope.chosenTags) will stringify chosenTags ***/
             artOb.tags = UtilFactory.tagsToStr($scope.chosenTags);
-            //console.log(artOb.tags);
             
             artOb.art_movement = $scope.curSelection.movement;
             
