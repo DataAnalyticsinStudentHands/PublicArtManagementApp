@@ -17,7 +17,8 @@
                   type="item-text-wrap"
                   href="#/edit/{{object.artwork_id}}">
             <ion-delete-button class="ion-minus-circled"
-                               ng-click="confirmDelete(object.title,object.artwork_id,$index)"></ion-delete-button>
+                               ng-click="confirmDelete(object.title,object.artwork_id,$index)">
+            </ion-delete-button>
             <b>{{object.title}}</b> by {{object.artist_name}}
         </ion-item>
     </ion-list>

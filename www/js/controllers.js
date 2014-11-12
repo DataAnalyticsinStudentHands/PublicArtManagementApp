@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function ($scope, UtilFactory, $ionicPopup, $timeout, ArtObjectFactory, $filter, $stateParams, DBService) { //ngNotify,
+.controller('DashCtrl', function ($scope, UtilFactory, $ionicPopup, $timeout, $filter, $stateParams, DBService) { //ngNotify,
     
     $scope.artOb = {};
     
