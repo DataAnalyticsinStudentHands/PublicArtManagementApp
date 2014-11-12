@@ -281,7 +281,7 @@ angular.module('starter.controllers', [])
     
 })
 
-.controller('LoginCtrl', function ($scope, $state, $timeout, $ionicLoading, Auth, LoginFactory, DBService) {
+.controller('LoginCtrl', function ($scope, $state, $timeout, $ionicLoading, Auth, DBService) {
 
 
     if($scope.isAuthenticated() === true) {
