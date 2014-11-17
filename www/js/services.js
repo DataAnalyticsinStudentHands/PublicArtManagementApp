@@ -46,7 +46,7 @@ angular.module('starter.services', [])
     
     this.loadObjects = function(){
         
-        testProm = Restangular.all('artobjects').getList('',{Authorization:'Basic QWRtaW46dGVzdA=='});
+        testProm = Restangular.all('artobjects').getList();
         testProm.then(function(success){
         
             artObjects = success;
@@ -92,18 +92,19 @@ angular.module('starter.services', [])
     
     this.updateById = function(object){
         
-        Restangular.all('artobjects').all(object.artwork_id).post(object,'',{Authorization:'Basic QWRtaW46dGVzdA=='});
+        needUpdate = true;
+        return Restangular.all('artobjects').all(object.artwork_id).post(object);
     }
     
     this.addObject = function(object){
         
         needUpdate = true;
-        return Restangular.all('artobjects').post(object,'',{Authorization:'Basic QWRtaW46dGVzdA=='});
+        return Restangular.all('artobjects').post(object);
     }
     
     this.deleteById = function(id){
         
-        Restangular.all('artobjects').all(id).remove('',{Authorization:'Basic QWRtaW46dGVzdA=='});
+        Restangular.all('artobjects').all(id).remove();
     }
     
     this.needUpdate = function(){

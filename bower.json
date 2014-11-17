@@ -2,9 +2,10 @@
   "name": "blank",
   "private": "true",
   "dependencies": {
-      "angular-bootstrap-datetimepicker": "~0.3.0",
-      "ng-notify": "~0.5.0",
-      "restangular": "~1.4.0"
+    "angular-bootstrap-datetimepicker": "~0.3.0",
+    "ng-notify": "~0.5.0",
+    "restangular": "~1.4.0",
+    "ng-file-upload": "~1.6.12"
   },
   "devDependencies": {
     "ionic": "driftyco/ionic-bower#1.0.0-beta.13"

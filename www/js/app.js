@@ -13,7 +13,8 @@ angular.module('starter', ['ionic',
                            'restangular',
                            'ngNotify',
                            'databaseServicesModule',
-                           'ui.bootstrap.datetimepicker'
+                           'ui.bootstrap.datetimepicker',
+                           'angularFileUpload'
                           ]).run(function ($ionicPlatform) {
 
     $ionicPlatform.ready(function () {

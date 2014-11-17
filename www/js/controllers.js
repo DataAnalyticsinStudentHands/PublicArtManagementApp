@@ -45,16 +45,19 @@ angular.module('starter.controllers', [])
     $scope.curSelection.movement = $scope.movementsList[0];
     $scope.curSelection.campus = $scope.campusList[0];
     
-    // Add strings to lists if editing, that is, if not new object
+    // Initialize artOb if not on NEW page
     if($stateParams.objectId!=-1){
         
         $scope.artOb = DBService.getById($stateParams.objectId);
         
+        // Add strings to lists if editing, that is, if not new object
+        // artOb.art_movement not in the movementsList
         if(!UtilFactory.strPresent($scope.movementsList,$scope.artOb.art_movement)){
            
             $scope.movementsList.push($scope.artOb.art_movement);
         }
         
+        // artOb.location_campus not in the campusList
         if(!UtilFactory.strPresent($scope.campusList,$scope.artOb.location_campus)){
            
             $scope.campusList.push($scope.artOb.location_campus);
@@ -473,9 +476,75 @@ angular.module('starter.controllers', [])
     }
 })
 
-.controller('ImageCtrl', function($scope, $state, DBService){
+.controller('ImageCtrl', function($scope, $state, DBService, UtilFactory, $stateParams, $ionicPopup){
     
+    $scope.artOb = {};
+    $scope.showReorder = false;
+    $scope.showDel = false;
+    $scope.artOb = DBService.getById($stateParams.objectId);
     
+    $scope.imageArr = $scope.artOb.image.split(',');
+    $scope.trashArr = [];
+    
+    $scope.moveItem = function(item, fromIndex, toIndex){
+        
+        $scope.imageArr.splice(fromIndex, 1);
+        $scope.imageArr.splice(toIndex, 0, item);
+        
+        $scope.artOb.image = UtilFactory.tagsToStr($scope.imageArr);
+    }
+    
+    $scope.confirmDelete = function(ind){
+        
+        /*$scope.data = {}
+
+        // An elaborate, custom popup
+        var myPopup = $ionicPopup.confirm({
+            template: 'Delete \"'+$scope.imageArr[ind]+'?\"',
+            title: 'Confirm Deletion'
+        });
+
+        myPopup.then(function(res){
+            
+            if(res){
+                
+                $scope.imageArr.splice(ind,1);
+                $scope.artOb.image = $scope.imageArr;
+            }
+            else{
+                
+                console.log($scope.imageArr[ind]+" not deleted!");
+            }
+        });*/
+        
+        $scope.trashArr.push($scope.imageArr[ind]);
+        $scope.imageArr.splice(ind,1);
+        $scope.artOb.image = $scope.imageArr;
+    }
+    
+    $scope.confirmUndelete = function(ind){
+        
+        $scope.imageArr.push($scope.trashArr[ind]);
+        $scope.trashArr.splice(ind,1);
+        $scope.artOb.image = $scope.imageArr;
+    }
+    
+    $scope.uploadImage = function(){
+        
+        
+    }
+    
+    $scope.imageSubmit = function(){
+        
+        // Update DB artobject with changes
+        // Go back to main
+    }
+    
+    $scope.imageCancel = function(){
+        
+        // Don't submit changes and delete any uploaded images
+        // Go back to main
+    }
 })
 
 // Nested in DashCtrl
@@ -487,7 +556,7 @@ angular.module('starter.controllers', [])
         
         if (artOb) {
 
-            artOb.image = 'image.png';
+            artOb.image = 'img/test_sloth_1.jpeg,img/test_sloth_2.jpg,img/test_sloth_3.jpg';
             
             /*** UtilFactory.tagsToStr($scope.chosenTags) will stringify chosenTags ***/
             artOb.tags = UtilFactory.tagsToStr($scope.chosenTags);
@@ -562,14 +631,15 @@ angular.module('starter.controllers', [])
                     if($scope.artOb.artwork_id){
                     
 //$scope.Restangular().all('artobjects').all($scope.artOb.artwork_id).post($scope.artOb,'',{Authorization:'Basic QWRtaW46dGVzdA=='});
-                        DBService.updateById($scope.artOb);
-                        $state.go('main');
+                        DBService.updateById($scope.artOb).then(function(res){
+                        
+                            $state.go('main');
+                        });
                     }
                     else{
                     
                         //$scope.Restangular().all('artobjects').post($scope.artOb,'',{Authorization:'Basic QWRtaW46dGVzdA=='});
                             DBService.addObject($scope.artOb).then(function(res){
-                        
                         
                                 $state.go('main');
                             });
