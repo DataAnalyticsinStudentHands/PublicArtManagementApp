@@ -27,7 +27,7 @@
                     </ion-delete-button>
                     <b>{{object.title}}</b> by {{object.artist_name}}
                 </ion-item>
-                <div class="button-bar" ng-show="showOps && $index==opIndex">
+                <div class="button-bar" ng-show="showOps && $index==opIndex && !showDel">
                     <a class="button button-stable"
                        href="#/edit/{{object.artwork_id}}"><b>Edit</b></a>
                     <a class="button button-positive"
