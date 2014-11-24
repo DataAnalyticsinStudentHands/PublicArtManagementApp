@@ -107,6 +107,11 @@ angular.module('starter.services', [])
         Restangular.all('artobjects').all(id).remove();
     }
     
+    this.deleteImage = function(id, filename){
+        
+        Restangular.all('artobjects').all('upload').remove({"id":id,"fileName":filename});
+    }
+    
     this.needUpdate = function(){
         
         return needUpdate;
