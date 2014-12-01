@@ -73,7 +73,8 @@ angular.module('starter', ['ionic',
 
 .run(['Restangular', '$rootScope', '$state', 'Auth', function(Restangular, $rootScope, $state, Auth) {
 
-    Restangular.setBaseUrl("http://localhost:8080/ArtApp/"); //Local Host
+    //Restangular.setBaseUrl("http://localhost:8080/ArtApp/"); //Local Host
+    Restangular.setBaseUrl("http://www.housuggest.org:8080/ArtApp/"); //Local Host
         
     //TO ACCESS RESTANGULAR IN CONTROLLERS WITHOUT INJECTION
     $rootScope.Restangular = function() {

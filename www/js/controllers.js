@@ -371,8 +371,6 @@ angular.module('starter.controllers', [])
             
             if(res){
                 
-                //testProm = $scope.Restangular().all('artobjects').all(id).remove('',{Authorization:'Basic QWRtaW46dGVzdA=='});
-                
                 DBService.deleteById(id);
                 
                 $scope.artObjects.splice(index,1);
@@ -400,6 +398,20 @@ angular.module('starter.controllers', [])
             
             $scope.showOps = true;
             $scope.opIndex = newInd;
+        }
+    }
+    
+    $scope.getImg = function(index){
+        
+        var firstImg = $scope.artObjects[index].image.split(",")[0];
+        
+        if(firstImg!=null && firstImg!=''){
+            
+            return "http://www.housuggest.org/images/ARtour/"+$scope.artObjects[index].artwork_id+"/"+firstImg;
+        }
+        else{
+            
+            return "img/test_sloth_2.jpg";
         }
     }
 })
@@ -483,28 +495,36 @@ angular.module('starter.controllers', [])
         
         $scope.trashArr.push($scope.imageArr[ind]);
         $scope.imageArr.splice(ind,1);
-        $scope.artOb.image = $scope.imageArr;
+        $scope.artOb.image = UtilFactory.tagsToStr($scope.imageArr);
     }
     
     $scope.confirmUndelete = function(ind){
         
         $scope.imageArr.push($scope.trashArr[ind]);
         $scope.trashArr.splice(ind,1);
-        $scope.artOb.image = $scope.imageArr;
+        $scope.artOb.image = UtilFactory.tagsToStr($scope.imageArr);
     }
     
     $scope.uploadImage = function(){
         
-        
+        // May be unusued???
     }
     
     $scope.imageSubmit = function(){
+        
+        for(var i=0;i<$scope.trashArr.length;i++){
+            
+            filename = $scope.trashArr[i];
+            DBService.deleteImage($stateParams.objectId,filename);
+        }
         
         DBService.updateById($scope.artOb).then(function(res){
             
             // Add ngNotify at some point
             $state.go('main');
         });
+        
+        // Delete images marked for removal
     }
     
     $scope.imageCancel = function(){
@@ -556,6 +576,8 @@ angular.module('starter.controllers', [])
             $scope.fileName = $file.name;
             // Tracks names of all files that are uploaded
             $scope.uploadedFileNames.push($scope.fileName);
+            // Add uploaded image name to imageArr
+            $scope.imageArr.push($scope.fileName);
 
             if ($scope.fileReaderSupported && $file.type.indexOf('image') > -1) {
                 var fileReader = new FileReader();
@@ -581,7 +603,7 @@ angular.module('starter.controllers', [])
 
         //$upload.upload()
         $scope.upload[index] = $upload.upload({
-            url: 'http://localhost:8080/ArtApp/artobjects/upload?id=' + $stateParams.objectId,
+            url: 'http://housuggest.org:8080/ArtApp/artobjects/upload?id=' + $stateParams.objectId,
             data: {
                 myModel: $scope.myModel,
                 errorCode: $scope.generateErrorOnServer && $scope.serverErrorCode,
@@ -679,7 +701,8 @@ angular.module('starter.controllers', [])
         
         if (artOb) {
 
-            artOb.image = 'img/test_sloth_1.jpeg,img/test_sloth_2.jpg,img/test_sloth_3.jpg';
+            if(!artOb.image)
+                artOb.image = '';
             
             /*** UtilFactory.tagsToStr($scope.chosenTags) will stringify chosenTags ***/
             artOb.tags = UtilFactory.tagsToStr($scope.chosenTags);

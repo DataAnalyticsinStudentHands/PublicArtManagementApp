@@ -21,7 +21,8 @@
                           type="item-text-wrap"
                           ng-click="toggleOps($index)">
                     <!--<img src="http://www.zooborns.com/.a/6a010535647bf3970b0192aa1c86c1970d-500wi">-->
-                    <img src="img/test_sloth_2.jpg">
+                    <!--<img src="img/test_sloth_2.jpg">-->
+                    <img ng-src={{getImg($index)}}>
                     <ion-delete-button class="ion-minus-circled"
                                     ng-click="confirmDelete(object.title,object.artwork_id,$index)">
                     </ion-delete-button>

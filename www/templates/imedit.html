@@ -12,7 +12,8 @@
         <ion-list show-reorder="showReorder" show-delete="showDel">
             <ion-item class="item item-thumbnail-left" ng-repeat="image in imageArr">
                 <!--<i class="icon ion-chatbubble-working"></i>-->
-                <img src='{{image}}'>
+                <!--<img src='{{image}}'>-->
+                <img ng-src='http://www.housuggest.org/images/ARtour/{{artOb.artwork_id}}/{{image}}'>
                 {{image}}
                 <ion-reorder-button class="ion-navicon"
                         on-reorder="moveItem(image, $fromIndex, $toIndex)">
