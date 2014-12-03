@@ -495,14 +495,12 @@ angular.module('starter.controllers', [])
         
         $scope.trashArr.push($scope.imageArr[ind]);
         $scope.imageArr.splice(ind,1);
-        $scope.artOb.image = UtilFactory.tagsToStr($scope.imageArr);
     }
     
     $scope.confirmUndelete = function(ind){
         
         $scope.imageArr.push($scope.trashArr[ind]);
         $scope.trashArr.splice(ind,1);
-        $scope.artOb.image = UtilFactory.tagsToStr($scope.imageArr);
     }
     
     $scope.uploadImage = function(){
@@ -518,7 +516,9 @@ angular.module('starter.controllers', [])
             DBService.deleteImage($stateParams.objectId,filename);
         }
         
-        DBService.updateById($scope.artOb).then(function(res){
+        $scope.artOb.image = UtilFactory.tagsToStr($scope.imageArr);
+        
+        DBService.updateById(Restangular.stripRestangular($scope.artOb)).then(function(res){
             
             // Add ngNotify at some point
             $state.go('main');
@@ -577,7 +577,7 @@ angular.module('starter.controllers', [])
             // Tracks names of all files that are uploaded
             $scope.uploadedFileNames.push($scope.fileName);
             // Add uploaded image name to imageArr
-            $scope.imageArr.push($scope.fileName);
+            //$scope.imageArr.push($scope.fileName);
 
             if ($scope.fileReaderSupported && $file.type.indexOf('image') > -1) {
                 var fileReader = new FileReader();
@@ -603,7 +603,7 @@ angular.module('starter.controllers', [])
 
         //$upload.upload()
         $scope.upload[index] = $upload.upload({
-            url: 'http://housuggest.org:8080/ArtApp/artobjects/upload?id=' + $stateParams.objectId,
+            url: 'http://www.housuggest.org:8080/ArtApp/artobjects/upload?id=' + $stateParams.objectId,
             data: {
                 myModel: $scope.myModel,
                 errorCode: $scope.generateErrorOnServer && $scope.serverErrorCode,
@@ -617,6 +617,8 @@ angular.module('starter.controllers', [])
             $timeout(function () {
                 $scope.uploadResult.push(response.data);
                 $scope.updateView();
+                // Update imageArr after upload
+                $scope.imageArr.push($scope.fileName);
             });
         }, function (response) {
 
@@ -659,30 +661,7 @@ angular.module('starter.controllers', [])
     // Might use later to update the view
     $scope.updateView = function () {
         
-        /*
-        Restangular.customGET("upload", {
-            applicationId: $stateParams.applicationId
-        }).then(
-            function (result) {
-                result = Restangular.stripRestangular(result);
-                $scope.myVariables = {};
-                $scope.myVariables.orig_fileEssay1 = $filter('filter')(result.fileName, 'essay1');
-                if ($scope.myVariables.orig_fileEssay1.length !== 0) {
-                    $scope.myVariables.fileEssay1 = $scope.myVariables.orig_fileEssay1[0].substr(6);
-                }
-                $scope.myVariables.orig_fileEssay2 = $filter('filter')(result.fileName, 'essay2', 'true');
-                if ($scope.myVariables.orig_fileEssay2.length !== 0) {
-                    $scope.myVariables.fileEssay2 = $scope.myVariables.orig_fileEssay2[0].substr(6);
-                }
-
-            },
-            function (error) {
-                ngNotify.set("Something went wrong retrieving uploaded file information.", {
-                    position: 'bottom',
-                    type: 'error'
-                });
-            }
-        );*/
+        
         
     };
     
