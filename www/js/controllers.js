@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function ($scope, UtilFactory, $ionicPopup, $timeout, $filter, $stateParams, DBService) { //ngNotify,
+.controller('DashCtrl', function ($scope, UtilFactory, $ionicPopup, $timeout, $filter, $stateParams, DBService, $ionicScrollDelegate) { //ngNotify,
     
     $scope.artOb = {};
     
@@ -282,6 +282,13 @@ angular.module('starter.controllers', [])
 //        });
 //    };
     
+    $scope.resizeScroll = function(){
+        $ionicScrollDelegate.$getByHandle('editScroll').resize();
+        
+        if(!$scope.moreOps) {
+            $ionicScrollDelegate.$getByHandle('editScroll').scrollBottom(true);
+        }
+    }
 })
 
 .controller('LoginCtrl', function ($scope, $state, $timeout, $ionicLoading, Auth, DBService) {
@@ -332,7 +339,7 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('MainCtrl', function($scope, Auth, $state, $ionicPopup, DBService){
+.controller('MainCtrl', function($scope, Auth, $state, $ionicPopup, DBService, $ionicScrollDelegate){
     
     $scope.showDel = false;
     $scope.showOps = false;
@@ -413,6 +420,10 @@ angular.module('starter.controllers', [])
             
             return "img/test_sloth_2.jpg";
         }
+    }
+    
+    $scope.resizeScroll = function(){
+        $ionicScrollDelegate.$getByHandle('mainScroll').resize();
     }
 })
 

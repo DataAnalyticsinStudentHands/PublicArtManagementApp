@@ -7,10 +7,10 @@
         <h1 class="title">{{artOb.title ? artOb.title : "New Object"}}</h1>
     </ion-header-bar>
     
-    <ion-content class="padding">
+    
         
         <form name="new_art_form" ng-controller="NewArtCtrl" autocomplete="off">
-            
+        <ion-content class="padding" delegate-handle="editScroll">    
         <div class="list">
             
             <div class="item item-divider">
@@ -70,10 +70,10 @@
             </label>
             
             <!-- DESCRIPTION TYPE MAY CHANGE -->
-            <label class="item item-input">
-              <span class="input-label">Description:</span>
-              <input type="text" ng-model="artOb.description" name="description" required/>
-            </label>
+<!--            <label class="item item-input">-->
+<!--              <span class="input-label">Description:</span>-->
+            <textarea rows="10" class="item item-text-wrap" placeholder="Description" ng-model="artOb.description" name="description" required></textarea>
+<!--            </label>-->
             
             <!-- LATITUDE -->
             <label class="item item-input">
@@ -115,7 +115,7 @@
             </div>
             
             <div class="item item-divider"
-                 ng-click="moreOps=!moreOps"
+                 ng-click="moreOps=!moreOps;resizeScroll()"
                  ng-init="moreOps=false">Optional Fields</div>
             
             <label class="item item-input" ng-show="moreOps">

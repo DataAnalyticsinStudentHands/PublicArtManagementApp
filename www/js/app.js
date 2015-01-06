@@ -86,14 +86,14 @@ angular.module('starter', ['ionic',
     }
     
     $rootScope.$on("$stateChangeStart", function(event, toState, toParams, fromState, fromParams)     {
-      console.log("$stateChangeStart");
-      console.log($rootScope.isAuthenticated());
+      //console.log("$stateChangeStart");
+      //console.log($rootScope.isAuthenticated());
       if (toState.authenticate && !$rootScope.isAuthenticated()){
-        console.log("non-authed");
+        //console.log("non-authed");
         // User isn’t authenticated
         $state.go("login");
         //What?
         event.preventDefault(); 
-      } else console.log("authed");
+      } //else console.log("authed");
     });
 }]);
