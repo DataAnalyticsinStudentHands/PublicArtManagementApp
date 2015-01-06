@@ -51,17 +51,17 @@ angular.module('starter.services', [])
         
             artObjects = success;
             
-            for(var i=0;i<artObjects.length;i++){
-                
-                if(artObjects[i].date_made && artObjects[i].date_made){
-                    
-                    var dob = (new Date(artObjects[i].artist_dob));
-                    var made = (new Date(artObjects[i].date_made));
-                    
-                    artObjects[i].date_made = made.getFullYear()+"/"+made.getMonth()+"/"+made.getDate();
-                    artObjects[i].artist_dob = dob.getFullYear()+"/"+dob.getMonth()+"/"+dob.getDate();
-                }
-            }
+//            for(var i=0;i<artObjects.length;i++){
+//                
+//                if(artObjects[i].date_made && artObjects[i].date_made){
+//                    
+//                    var dob = (new Date(artObjects[i].artist_dob));
+//                    var made = (new Date(artObjects[i].date_made));
+//                    
+//                    artObjects[i].date_made = made.getFullYear()+"/"+made.getMonth()+"/"+made.getDate();
+//                    artObjects[i].artist_dob = dob.getFullYear()+"/"+dob.getMonth()+"/"+dob.getDate();
+//                }
+//            }
             
             needUpdate = false;
         },

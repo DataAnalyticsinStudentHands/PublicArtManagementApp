@@ -127,15 +127,13 @@
               <input type="text" ng-model="artOb.artist_pob"/>
             </label>
             
+            <!--     ng-pattern='/^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/'-->
             <!-- NEED TO MODIFY DATE OUTPUT FOR DATABASE -->
             <label class="item item-input" ng-show="moreOps">
               <span class="input-label">Artist DoB:</span>
               <input type="text"
                      ng-model="artOb.artist_dob"
-                     placeholder="yyyy-mm-dd"
-                     ng-pattern='/^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/'
-                     name="artist_dob"
-                     ng-click="openDatePicker('Artist\'s Date of Birth','artist_dob')"/>
+                     name="artist_dob"/>
             </label>
             
             <!-- NEED TO MODIFY DATE OUTPUT FOR DATABASE -->
@@ -143,10 +141,7 @@
               <span class="input-label">Date Made:</span>
               <input type="text"
                      ng-model="artOb.date_made"
-                     placeholder="yyyy-mm-dd"
-                     ng-pattern='/^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/'
-                     name="date_made"
-                     ng-click="openDatePicker('Date Made','date_made')"/>
+                     name="date_made"/>
             </label>
             
             <label class="item item-input" ng-show="moreOps">

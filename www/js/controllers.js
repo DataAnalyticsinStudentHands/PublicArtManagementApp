@@ -258,29 +258,29 @@ angular.module('starter.controllers', [])
         return false;
     }
     
-    $scope.openDatePicker = function (title, target) {
-        $scope.data = {};
-
-        var datePopup = $ionicPopup.show({
-            template: '<datetimepicker data-ng-model="data.newDate" data-datetimepicker-config="{ startView:\'year\', minView:\'day\' }"></datetimepicker>',
-            title: title,
-            scope: $scope,
-            buttons: [
-                {
-                    text: 'Cancel'
-                },
-                {
-                    text: '<b>Save</b>',
-                    type: 'button-positive',
-                    onTap: function (e) {
-                        var test = $filter('date')($scope.data.newDate, 'yyyy-MM-dd');
-                        //$scope.myapplication[acType] = test;
-                        $scope.artOb[target] = test;
-                    }
-                }
-            ]
-        });
-    };
+//    $scope.openDatePicker = function (title, target) {
+//        $scope.data = {};
+//
+//        var datePopup = $ionicPopup.show({
+//            template: '<datetimepicker data-ng-model="data.newDate" data-datetimepicker-config="{ startView:\'year\', minView:\'day\' }"></datetimepicker>',
+//            title: title,
+//            scope: $scope,
+//            buttons: [
+//                {
+//                    text: 'Cancel'
+//                },
+//                {
+//                    text: '<b>Save</b>',
+//                    type: 'button-positive',
+//                    onTap: function (e) {
+//                        var test = $filter('date')($scope.data.newDate, 'yyyy-MM-dd');
+//                        //$scope.myapplication[acType] = test;
+//                        $scope.artOb[target] = test;
+//                    }
+//                }
+//            ]
+//        });
+//    };
     
 })
 
