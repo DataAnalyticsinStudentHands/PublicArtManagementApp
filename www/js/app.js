@@ -66,6 +66,13 @@ angular.module('starter', ['ionic',
         authenticate: true
     })
     
+    .state('touredit', {
+        url:'/touredit/:tourId',
+        templateUrl: 'templates/touredit.html',
+        controller: 'TourEditCtrl',
+        authenticate: true
+    })
+    
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/login');
 

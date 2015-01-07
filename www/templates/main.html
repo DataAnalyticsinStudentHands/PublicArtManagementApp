@@ -13,28 +13,35 @@
     
     <ion-content class="padding" delegate-handle="mainScroll">
         <ion-list show-delete="showDel">
-            <div ng-repeat="object in artObjects">
-                <!--<ion-item class="item" 
+                <ion-item ng-repeat="tour in tours" class="item" 
                           type="item-text-wrap"
-                          href="#/edit/{{object.artwork_id}}">-->
-                <ion-item class="item item-thumbnail-left" 
+                          href="#/touredit/{{tour.tour_id}}"
+                          ng-click="resizeScroll();">
+                    <ion-delete-button class="ion-minus-circled"
+                                    ng-click="confirmTourDelete(tour.tour_title,tour.tour_id,$index)">
+                    </ion-delete-button>
+                    <b>{{tour.tour_title}}</b>
+                </ion-item>
+            
+            
+            
+            
+                <ion-item ng-repeat-start="object in artObjects" class="item item-thumbnail-left" 
                           type="item-text-wrap"
                           ng-click="toggleOps($index);resizeScroll();">
-                    <!--<img src="http://www.zooborns.com/.a/6a010535647bf3970b0192aa1c86c1970d-500wi">-->
-                    <!--<img src="img/test_sloth_2.jpg">-->
                     <img ng-src={{getImg($index)}}>
                     <ion-delete-button class="ion-minus-circled"
                                     ng-click="confirmDelete(object.title,object.artwork_id,$index)">
                     </ion-delete-button>
                     <b>{{object.title}}</b> by {{object.artist_name}}
                 </ion-item>
-                <div class="button-bar" ng-show="showOps && $index==opIndex && !showDel">
+                <div ng-repeat-end class="button-bar" ng-show="showOps && $index==opIndex && !showDel">
                     <a class="button button-stable"
                        href="#/edit/{{object.artwork_id}}"><b>Edit</b></a>
                     <a class="button button-positive"
                        href="#/imedit/{{object.artwork_id}}">Manage Images</a>
                 </div>
-            </div>
+
         </ion-list>
     </ion-content>
 </ion-view>

@@ -291,6 +291,41 @@ angular.module('starter.controllers', [])
     }
 })
 
+.controller('TourEditCtrl', function ($scope, UtilFactory, $ionicPopup, $timeout, $filter, $stateParams, DBService, $ionicScrollDelegate){
+    
+    $scope.tour = DBService.getTourById($stateParams.tourId);
+    $scope.artwork = DBService.getObjects();
+    $scope.showReorder = false;
+    $scope.showDel = false;
+    
+    $scope.includedArr = [];
+    $scope.excludedArr = [];
+    
+    for(var i=0;i<$scope.artwork.length;i++){
+        
+        var shouldContinue = false;
+        
+        for(var j=0;j<$scope.tour.artwork_included.length;j++){
+            
+            if($scope.artwork[i].artwork_id==$scope.tour.artwork_included[j]){
+                
+                $scope.includedArr.push($scope.artwork[i]);
+                shouldContinue = true;
+                break;
+            }
+        }
+        
+        if(shouldContinue){
+            
+            continue;
+        }
+        else{
+            
+            $scope.excludedArr.push($scope.artwork[i]);
+        }
+    }
+})
+
 .controller('LoginCtrl', function ($scope, $state, $timeout, $ionicLoading, Auth, DBService) {
 
 
@@ -346,6 +381,7 @@ angular.module('starter.controllers', [])
     $scope.opIndex = -1;
     
     var obs = DBService.getObjects();
+    var obsTour = DBService.getTours();
     
     if(obs.length!=null && obs.length!=0 && !DBService.needUpdate){
         
@@ -356,6 +392,23 @@ angular.module('starter.controllers', [])
         DBService.loadObjects().then(function(success){
             
             $scope.artObjects = success;
+            DBService.setNeedUpdate(false);
+        },
+        function(fail){
+            
+            
+        });
+    }
+    
+    if(obsTour.length!=null && obsTour.length!=0 && !DBService.needUpdate){
+        
+        $scope.tours = DBService.getTours();
+    }
+    else{
+        
+        DBService.loadTours().then(function(success){
+            
+            $scope.tours = success;
             DBService.setNeedUpdate(false);
         },
         function(fail){
@@ -425,6 +478,8 @@ angular.module('starter.controllers', [])
     $scope.resizeScroll = function(){
         $ionicScrollDelegate.$getByHandle('mainScroll').resize();
     }
+    
+    
 })
 
 .controller('ImageCtrl', function($filter, $scope, $state, DBService, UtilFactory, $stateParams, $ionicPopup, $http, Restangular, $upload, $timeout){

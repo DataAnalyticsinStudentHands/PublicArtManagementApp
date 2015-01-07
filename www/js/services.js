@@ -42,6 +42,7 @@ angular.module('starter.services', [])
 .service('DBService', function(Restangular){
     
     var artObjects = {};
+    var tours = {}
     var needUpdate = false;
     
     this.loadObjects = function(){
@@ -120,5 +121,47 @@ angular.module('starter.services', [])
     this.setNeedUpdate = function(need){
         
         needUpdate = need;
+    }
+    
+    this.loadTours = function(){
+        
+        testProm = Restangular.all('tours').getList();
+        testProm.then(function(success){
+        
+            tours = success;
+            
+            tours.forEach(function(curVal, ind, arr){
+                
+                if(curVal.artwork_included){
+                    
+                    curVal.artwork_included = curVal.artwork_included.split(",");
+                }
+            });
+            
+            needUpdate = false;
+        },
+        function(error){
+            
+            console.log('There was an error');
+        });
+        
+        return testProm;
+    }
+    
+    this.getTours = function(){
+        
+        if(tours.length == 0)
+            return null;
+        else
+            return tours;
+    }
+    
+    this.getTourById = function(id){
+        
+        temp = tours.filter(function(element) {
+            return element.tour_id == id;
+        });
+        
+        return temp[0];
     }
 });
