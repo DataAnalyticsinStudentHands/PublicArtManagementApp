@@ -39,7 +39,7 @@ angular.module('starter.services', [])
     }
 })
 
-.service('DBService', function(Restangular){
+.service('DBService', function(Restangular, UtilFactory){
     
     var artObjects = {};
     var tours = {}
@@ -163,5 +163,25 @@ angular.module('starter.services', [])
         });
         
         return temp[0];
+    }
+    
+    this.updateTourById = function(tourIn){
+        
+        needUpdate = true;
+        
+        tourIn.artwork_included = UtilFactory.tagsToStr(tourIn.artwork_included);
+        
+        return Restangular.all('tours').all(tourIn.tour_id).post(tourIn);
+    }
+    
+    this.addTour = function(tour){
+        
+        needUpdate = true;
+        return Restangular.all('tours').post(tour);
+    }
+    
+    this.deleteTourById = function(id){
+        
+        Restangular.all('tours').all(id).remove();
     }
 });

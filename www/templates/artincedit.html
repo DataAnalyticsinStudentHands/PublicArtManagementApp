@@ -1,33 +1,39 @@
 <ion-view title="TourEdit">
     <ion-header-bar align-title="center" class="bar-stable">
         <div class="buttons">
-            <button class="button" ng-click="showDel=!showDel;showReorder=false">Delete</button>
-            <button class="button" ng-click="showReorder=!showReorder;showDel=false">Reorder</button>
+            <button class="button" ng-click="showDel=!showDel;showReorder=false;">Delete</button>
+            <button class="button" ng-click="showReorder=!showReorder;showDel=false;">Reorder</button>
         </div>
         <h1 class="title">{{tour.tour_title}}</h1>
     </ion-header-bar>
     
     <ion-content>
-        <div class="list" show-reorder="showReorder" show-delete="showDel">
+        <ion-list show-reorder="showReorder" show-delete="showDel">
             <ion-item class="item-divider">Included</ion-item>
-            <ion-item class="item-thumbnail-left" ng-repeat="art in includedArr">
+            <ion-item class="item-thumbnail-left" ng-repeat="art in includedArr track by $index">
                 <img ng-src='http://www.housuggest.org/images/ARtour/{{art.artwork_id}}/{{art.image.split(",")[0]}}'>
                 {{art.title}}
                 <ion-reorder-button class="ion-navicon"
-                        on-reorder="moveItem(image, $fromIndex, $toIndex)">
+                        on-reorder="moveItem(art, $fromIndex, $toIndex)">
                 </ion-reorder-button>
                 <ion-delete-button class="ion-minus-circled"
                                    ng-click="confirmDelete($index)">
                 </ion-delete-button>
             </ion-item>
             <ion-item class="item-divider">Excluded</ion-item>
-            <ion-item class="item-thumbnail-left" ng-repeat="art in excludedArr">
+            <ion-item class="item-thumbnail-left" ng-repeat="art in excludedArr track by $index">
                 <img ng-src='http://www.housuggest.org/images/ARtour/{{art.artwork_id}}/{{art.image.split(",")[0]}}'>
                 {{art.title}}
                 <ion-delete-button class="ion-plus-circled"
                                    ng-click="confirmUndelete($index)">
                 </ion-delete-button>
             </ion-item>
-        </div>
+        </ion-list>
     </ion-content>
+    
+    <ion-footer-bar class="bar-stable">
+        <div class="buttons">
+            <button class="button" ng-click="onSubmit()">Submit</button>
+        </div>
+    </ion-footer-bar>
 </ion-view>

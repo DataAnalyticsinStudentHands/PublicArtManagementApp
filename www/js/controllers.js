@@ -291,7 +291,7 @@ angular.module('starter.controllers', [])
     }
 })
 
-.controller('TourEditCtrl', function ($scope, UtilFactory, $ionicPopup, $timeout, $filter, $stateParams, DBService, $ionicScrollDelegate){
+.controller('TourEditCtrl', function ($scope, UtilFactory, $ionicPopup, $timeout, $filter, $stateParams, DBService, $ionicScrollDelegate, Restangular, UtilFactory, $state){
     
     $scope.tour = DBService.getTourById($stateParams.tourId);
     $scope.artwork = DBService.getObjects();
@@ -324,6 +324,44 @@ angular.module('starter.controllers', [])
             $scope.excludedArr.push($scope.artwork[i]);
         }
     }
+    
+    $scope.moveItem = function(item, fromInd, toInd){
+        
+        $scope.includedArr.splice(fromInd-1, 1);
+        $scope.includedArr.splice(toInd-1, 0, item);
+    }
+    
+    $scope.confirmDelete = function(ind){
+        
+        //$scope.excludedArr.push($scope.includedArr[ind]);
+        $scope.excludedArr.splice(0, 0, $scope.includedArr[ind]);
+        $scope.includedArr.splice(ind,1);
+    }
+    
+    $scope.confirmUndelete = function(ind){
+        
+        $scope.includedArr.push($scope.excludedArr[ind]);
+        $scope.excludedArr.splice(ind,1);
+    }
+    
+    
+    $scope.onSubmit = function(){
+        
+        var tempArr = [];
+        
+        for(var i=0;i<$scope.includedArr.length;i++){
+            
+            tempArr[i] = $scope.includedArr[i].artwork_id.toString();
+        }
+        
+        $scope.tour.artwork_included = tempArr;
+
+        DBService.updateTourById(Restangular.stripRestangular($scope.tour)).then(function(res){
+
+            // Add ngNotify at some point
+            $state.go('main');
+        });
+    }
 })
 
 .controller('LoginCtrl', function ($scope, $state, $timeout, $ionicLoading, Auth, DBService) {
@@ -341,7 +379,6 @@ angular.module('starter.controllers', [])
     $scope.user = {};
      $scope.salt = "nfp89gpe"; //PENDING - NEED TO GET ACTUAL SALT
      $scope.submit = function(name,pass) {
-         console.log("SUBMIT");
          if ($scope.user.username && $scope.user.password) {
              document.activeElement.blur();
              $timeout(function() {
@@ -378,7 +415,9 @@ angular.module('starter.controllers', [])
     
     $scope.showDel = false;
     $scope.showOps = false;
+    $scope.showTourOps = false;
     $scope.opIndex = -1;
+    $scope.opTourIndex = -1;
     
     var obs = DBService.getObjects();
     var obsTour = DBService.getTours();
@@ -458,6 +497,19 @@ angular.module('starter.controllers', [])
             
             $scope.showOps = true;
             $scope.opIndex = newInd;
+        }
+    }
+    
+    $scope.toggleTourOps = function(newInd){
+        
+        if(newInd == $scope.opTourIndex){
+            
+            $scope.showTourOps = !$scope.showTourOps;
+        }
+        else{
+            
+            $scope.showTourOps = true;
+            $scope.opTourIndex = newInd;
         }
     }
     

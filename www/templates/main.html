@@ -1,47 +1,73 @@
 <ion-view title="Main">
     
-    <ion-header-bar align-title="center" class="bar-stable">
-        <div class="buttons">
-            <a class="button" href="#/edit/-1">New</a>
-            <button class="button" ng-click="showDel=!showDel;showOps=false">Delete</button>
-        </div>
-        <h1 class="title">Art Objects</h1>
-        <div class="buttons">
-            <button class="button" ng-click="logOut()">Log Out</button>
-        </div>
-    </ion-header-bar>
-    
-    <ion-content class="padding" delegate-handle="mainScroll">
-        <ion-list show-delete="showDel">
-                <ion-item ng-repeat="tour in tours" class="item" 
-                          type="item-text-wrap"
-                          href="#/touredit/{{tour.tour_id}}"
-                          ng-click="resizeScroll();">
-                    <ion-delete-button class="ion-minus-circled"
-                                    ng-click="confirmTourDelete(tour.tour_title,tour.tour_id,$index)">
-                    </ion-delete-button>
-                    <b>{{tour.tour_title}}</b>
-                </ion-item>
-            
-            
-            
-            
-                <ion-item ng-repeat-start="object in artObjects" class="item item-thumbnail-left" 
-                          type="item-text-wrap"
-                          ng-click="toggleOps($index);resizeScroll();">
-                    <img ng-src={{getImg($index)}}>
-                    <ion-delete-button class="ion-minus-circled"
-                                    ng-click="confirmDelete(object.title,object.artwork_id,$index)">
-                    </ion-delete-button>
-                    <b>{{object.title}}</b> by {{object.artist_name}}
-                </ion-item>
-                <div ng-repeat-end class="button-bar" ng-show="showOps && $index==opIndex && !showDel">
-                    <a class="button button-stable"
-                       href="#/edit/{{object.artwork_id}}"><b>Edit</b></a>
-                    <a class="button button-positive"
-                       href="#/imedit/{{object.artwork_id}}">Manage Images</a>
-                </div>
+    <ion-tabs class="tabs-stable tabs-icon-only">
 
-        </ion-list>
-    </ion-content>
+        <ion-tab title="Home" icon="ion-image">
+            <ion-header-bar align-title="center" class="bar-stable">
+                <div class="buttons">
+                    <a class="button" href="#/edit/-1">New</a>
+                    <button class="button" ng-click="showDel=!showDel;showOps=false;showTourOps=false;">Delete</button>
+                </div>
+                <h1 class="title">Artwork</h1>
+                <div class="buttons">
+                    <button class="button" ng-click="logOut()">Log Out</button>
+                </div>
+            </ion-header-bar>
+            
+            <ion-content class="padding" delegate-handle="mainScroll">
+                <ion-list show-delete="showDel">
+                        <ion-item ng-repeat-start="object in artObjects" class="item item-thumbnail-left" 
+                                  type="item-text-wrap"
+                                  ng-click="toggleOps($index);resizeScroll();">
+                            <img ng-src={{getImg($index)}}>
+                            <ion-delete-button class="ion-minus-circled"
+                                            ng-click="confirmDelete(object.title,object.artwork_id,$index)">
+                            </ion-delete-button>
+                            <b>{{object.title}}</b> by {{object.artist_name}}
+                        </ion-item>
+                        <div ng-repeat-end class="button-bar" ng-show="showOps && $index==opIndex && !showDel">
+                            <a class="button button-stable"
+                               href="#/edit/{{object.artwork_id}}"><b>Edit</b></a>
+                            <a class="button button-positive"
+                               href="#/imedit/{{object.artwork_id}}">Manage Images</a>
+                        </div>
+                </ion-list>
+            </ion-content>
+        </ion-tab>
+
+        <ion-tab title="About" icon="ion-map">
+            <ion-header-bar align-title="center" class="bar-stable">
+                <div class="buttons">
+                    <a class="button" href="#/edit/-1">New</a>
+                    <button class="button" ng-click="showDel=!showDel;showOps=false">Delete</button>
+                </div>
+                <h1 class="title">Tours</h1>
+                <div class="buttons">
+                    <button class="button" ng-click="logOut()">Log Out</button>
+                </div>
+            </ion-header-bar>
+            
+            <ion-content class="padding" delegate-handle="mainScroll">
+                <ion-list show-delete="showDel">
+                        <ion-item ng-repeat-start="tour in tours" class="item" 
+                                  type="item-text-wrap"
+                                  ng-click="toggleTourOps($index);resizeScroll();">
+                            <ion-delete-button class="ion-minus-circled"
+                                            ng-click="confirmTourDelete(tour.tour_title,tour.tour_id,$index)">
+                            </ion-delete-button>
+                            <b>{{tour.tour_title}}</b>
+                        </ion-item>
+                        <div ng-repeat-end class="button-bar" ng-show="showTourOps && $index==opTourIndex && !showDel">
+                            <a class="button button-stable"
+                               href="#/edit/{{tour.tour_id}}"><b>Edit</b></a>
+                            <a class="button button-positive"
+                               href="#/artincedit/{{tour.tour_id}}">Manage Images</a>
+                        </div>
+                </ion-list>
+            </ion-content>
+        </ion-tab>
+
+    </ion-tabs>
+    
+    
 </ion-view>

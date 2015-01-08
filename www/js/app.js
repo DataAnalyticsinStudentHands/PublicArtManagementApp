@@ -66,9 +66,9 @@ angular.module('starter', ['ionic',
         authenticate: true
     })
     
-    .state('touredit', {
-        url:'/touredit/:tourId',
-        templateUrl: 'templates/touredit.html',
+    .state('artincedit', {
+        url:'/artincedit/:tourId',
+        templateUrl: 'templates/artincedit.html',
         controller: 'TourEditCtrl',
         authenticate: true
     })
@@ -80,8 +80,8 @@ angular.module('starter', ['ionic',
 
 .run(['Restangular', '$rootScope', '$state', 'Auth', function(Restangular, $rootScope, $state, Auth) {
 
-    //Restangular.setBaseUrl("http://localhost:8080/ArtApp/"); //Local Host
-    Restangular.setBaseUrl("http://www.housuggest.org:8080/ArtApp/"); //DASH Server
+    Restangular.setBaseUrl("http://localhost:8080/ArtApp/"); //Local Host
+    //Restangular.setBaseUrl("http://www.housuggest.org:8080/ArtApp/"); //DASH Server
     
     //TO ACCESS RESTANGULAR IN CONTROLLERS WITHOUT INJECTION
     $rootScope.Restangular = function() {
