@@ -478,6 +478,31 @@ angular.module('starter.controllers', [])
         });
     }
     
+    $scope.confirmTourDelete = function(inTitle,id,index){
+        
+        $scope.data = {}
+
+        // An elaborate, custom popup
+        var myPopup = $ionicPopup.confirm({
+            template: 'Delete \"'+inTitle+'?\"',
+            title: 'Confirm Deletion'
+        });
+
+        myPopup.then(function(res){
+            
+            if(res){
+                
+                DBService.deleteTourById(id);
+                
+                $scope.tours.splice(index,1);
+            }
+            else{
+                
+                console.log(inTitle+" not deleted!");
+            }
+        });
+    }
+    
     $scope.logOut = function(){
         
         Auth.clearCredentials();
