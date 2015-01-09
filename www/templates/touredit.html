@@ -1,0 +1,51 @@
+<ion-view title="TourEdit">
+    <ion-nav-bar align-title="center" class="bar-stable">
+        <div class="buttons">
+            <a class="button" ng-click="goBack()">Back</a>
+        </div>
+        <h1 class="title">{{tour.tour_title ? tour.tour_title : "New Tour"}}</h1>
+    </ion-nav-bar>
+    
+    <ion-content class="padding" delegate-handle="tourEditScroll">   
+        
+        <form name="new_tour_form" ng-controller="NewTourCtrl" autocomplete="off">
+         
+            <div class="list">
+
+                <div class="item item-divider">
+                    Required Fields
+                </div>
+
+                <label class="item item-input">
+                  <span class="input-label">Title:</span>
+                  <input type="text"
+                         ng-model="tour.tour_title"
+                         name="title"
+                         required/>
+                </label>
+                <label class="item item-input">
+                  <span class="input-label">Creator:</span>
+                  <input type="text" ng-model="tour.creator" name="creator" required/>
+                </label>
+                <label class="item item-input">
+                  <span class="input-label">Date Created:</span>
+                  <input type="text" ng-model="tour.date_created" name="date_created" required/>
+                </label>
+                <label class="item item-input">
+                  <span class="input-label">Artistic Attributes:</span>
+                  <input type="text" ng-model="tour.artistic_attributes" name="artistic_attributes" required/>
+                </label>
+            </div>
+
+            <div class="padding">
+                <button type="submit"
+                        class="button button-block button-positive"
+                        ng-click="createTour(tour)">
+                  Submit
+                </button>
+            </div>
+            
+        </form>
+        
+    </ion-content>
+</ion-view>

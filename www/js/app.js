@@ -69,6 +69,13 @@ angular.module('starter', ['ionic',
     .state('artincedit', {
         url:'/artincedit/:tourId',
         templateUrl: 'templates/artincedit.html',
+        controller: 'ArtIncCtrl',
+        authenticate: true
+    })
+    
+    .state('touredit', {
+        url:'/touredit/:tourId',
+        templateUrl: 'templates/touredit.html',
         controller: 'TourEditCtrl',
         authenticate: true
     })

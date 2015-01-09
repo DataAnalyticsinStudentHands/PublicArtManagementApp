@@ -258,30 +258,6 @@ angular.module('starter.controllers', [])
         return false;
     }
     
-//    $scope.openDatePicker = function (title, target) {
-//        $scope.data = {};
-//
-//        var datePopup = $ionicPopup.show({
-//            template: '<datetimepicker data-ng-model="data.newDate" data-datetimepicker-config="{ startView:\'year\', minView:\'day\' }"></datetimepicker>',
-//            title: title,
-//            scope: $scope,
-//            buttons: [
-//                {
-//                    text: 'Cancel'
-//                },
-//                {
-//                    text: '<b>Save</b>',
-//                    type: 'button-positive',
-//                    onTap: function (e) {
-//                        var test = $filter('date')($scope.data.newDate, 'yyyy-MM-dd');
-//                        //$scope.myapplication[acType] = test;
-//                        $scope.artOb[target] = test;
-//                    }
-//                }
-//            ]
-//        });
-//    };
-    
     $scope.resizeScroll = function(){
         $ionicScrollDelegate.$getByHandle('editScroll').resize();
         
@@ -291,7 +267,7 @@ angular.module('starter.controllers', [])
     }
 })
 
-.controller('TourEditCtrl', function ($scope, UtilFactory, $ionicPopup, $timeout, $filter, $stateParams, DBService, $ionicScrollDelegate, Restangular, UtilFactory, $state){
+.controller('ArtIncCtrl', function ($scope, UtilFactory, $ionicPopup, $timeout, $filter, $stateParams, DBService, $ionicScrollDelegate, Restangular, UtilFactory, $state, $ionicNavBarDelegate){
     
     $scope.tour = DBService.getTourById($stateParams.tourId);
     $scope.artwork = DBService.getObjects();
@@ -301,21 +277,32 @@ angular.module('starter.controllers', [])
     $scope.includedArr = [];
     $scope.excludedArr = [];
     
+    for(var i=0;i<$scope.tour.artwork_included.length;i++){
+        
+        for(var j=0;j<$scope.artwork.length;j++){
+        
+            if($scope.artwork[j].artwork_id.toString()==$scope.tour.artwork_included[i]){
+                
+                $scope.includedArr.push($scope.artwork[j]);
+                break;
+            }
+        }
+    }
+    
     for(var i=0;i<$scope.artwork.length;i++){
         
-        var shouldContinue = false;
+        var shouldCont = false;
         
-        for(var j=0;j<$scope.tour.artwork_included.length;j++){
+        for(var j=0;j<$scope.includedArr.length;j++){
             
-            if($scope.artwork[i].artwork_id==$scope.tour.artwork_included[j]){
+            if($scope.artwork[i].artwork_id==$scope.includedArr[j].artwork_id){
                 
-                $scope.includedArr.push($scope.artwork[i]);
-                shouldContinue = true;
+                shouldCont = true;
                 break;
             }
         }
         
-        if(shouldContinue){
+        if(shouldCont){
             
             continue;
         }
@@ -361,6 +348,11 @@ angular.module('starter.controllers', [])
             // Add ngNotify at some point
             $state.go('main');
         });
+    }
+    
+    $scope.goBack = function(){
+        
+        $ionicNavBarDelegate.back()
     }
 })
 
@@ -411,18 +403,23 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('MainCtrl', function($scope, Auth, $state, $ionicPopup, DBService, $ionicScrollDelegate){
+.controller('MainCtrl', function($scope, Auth, $state, $ionicPopup, DBService, $ionicScrollDelegate, $ionicTabsDelegate, $stateParams, $timeout, UtilFactory){
     
     $scope.showDel = false;
     $scope.showOps = false;
     $scope.showTourOps = false;
     $scope.opIndex = -1;
     $scope.opTourIndex = -1;
+    $scope.setTab = UtilFactory.setTab;
+    
+    $timeout(function(){
+        $ionicTabsDelegate.$getByHandle('main-tabs').select(UtilFactory.getTab());
+    },50);
     
     var obs = DBService.getObjects();
     var obsTour = DBService.getTours();
     
-    if(obs.length!=null && obs.length!=0 && !DBService.needUpdate){
+    if(obs.length!=null && obs.length!=0 && !DBService.needUpdate()){
         
         $scope.artObjects = DBService.getObjects();
     }
@@ -439,7 +436,7 @@ angular.module('starter.controllers', [])
         });
     }
     
-    if(obsTour.length!=null && obsTour.length!=0 && !DBService.needUpdate){
+    if(obsTour.length!=null && obsTour.length!=0 && !DBService.needTourUpdate()){
         
         $scope.tours = DBService.getTours();
     }
@@ -448,7 +445,7 @@ angular.module('starter.controllers', [])
         DBService.loadTours().then(function(success){
             
             $scope.tours = success;
-            DBService.setNeedUpdate(false);
+            DBService.setNeedTourUpdate(false);
         },
         function(fail){
             
@@ -910,6 +907,92 @@ angular.module('starter.controllers', [])
             }
             
             console.log(errorStack[0]);
+            
+            //DON'T FORGET TO RE-ENABLE NOTIFY
+            /*ngNotify.set(errorStack[0], {
+                position: 'bottom',
+                type: 'error'
+            });*/
+        }
+    }
+})
+
+.controller('TourEditCtrl', function($filter, $scope, $state, DBService, UtilFactory, $stateParams, $ionicPopup, $http, Restangular, $upload, $timeout, $ionicNavBarDelegate){
+    
+    $scope.tour_id = $stateParams.tourId;
+    $scope.tour = DBService.getTourById($scope.tour_id);
+    
+    $scope.goBack = function(){
+        
+        $ionicNavBarDelegate.back();
+    }
+})
+
+.controller('NewTourCtrl', function ($scope, UtilFactory, $ionicPopup, $timeout, $filter, $stateParams, DBService, $ionicScrollDelegate, $state) {
+    
+    $scope.createTour = function(tour) {
+    
+        if(tour.plain){
+            
+            tour = tour.plain();
+            $scope.tour = $scope.tour.plain();
+        }
+        
+        
+        // If date pattern matches OR date is empty, pattern error will be false
+        if($scope.new_tour_form.$valid){
+            
+            $scope.data = {}
+
+            // An elaborate, custom popup
+            var myPopup = $ionicPopup.show({
+                template: '<ul class="list"><li class="item item-text-wrap" ng-repeat="(key,value) in tour"><span class="input-label">{{key}}:</span><div>{{value}}</div></li></ul>',
+                title: "<b>Review Submission</b>",
+                subTitle: "",
+                scope: $scope,
+                buttons: [
+                    {
+                        text: 'Cancel'
+                    },
+                    {
+                        text: '<b>Submit</b>',
+                        type: 'button-positive',
+                        onTap: function (e) {
+                                
+                            return true;
+                        }
+                    }
+                ]
+            });
+
+            myPopup.then(function(success){
+            
+                if(success){
+                    if($scope.tour.tour_id){
+                    
+//$scope.Restangular().all('artobjects').all($scope.artOb.artwork_id).post($scope.artOb,'',{Authorization:'Basic QWRtaW46dGVzdA=='});
+                        DBService.updateTourById($scope.tour).then(function(res){
+                        
+                            $state.go('main');
+                        });
+                    }
+                    else{
+                    
+                        //$scope.Restangular().all('artobjects').post($scope.artOb,'',{Authorization:'Basic QWRtaW46dGVzdA=='});
+                            $scope.tour.artwork_included = "";
+                            DBService.addTour($scope.tour).then(function(res){
+                        
+                                $state.go('main');
+                            });
+                    
+                            //Update client-side list
+                    }
+                }
+            });
+        }
+        else{
+            
+            console.log("Required Field Left Blank");
             
             //DON'T FORGET TO RE-ENABLE NOTIFY
             /*ngNotify.set(errorStack[0], {

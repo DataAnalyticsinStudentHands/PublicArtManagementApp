@@ -1,6 +1,6 @@
 <ion-view title="Main">
     
-    <ion-tabs class="tabs-stable tabs-icon-only">
+    <ion-tabs class="tabs-stable tabs-icon-only" delegate-handle="main-tabs">
 
         <ion-tab title="Home" icon="ion-image">
             <ion-header-bar align-title="center" class="bar-stable">
@@ -27,8 +27,10 @@
                         </ion-item>
                         <div ng-repeat-end class="button-bar" ng-show="showOps && $index==opIndex && !showDel">
                             <a class="button button-stable"
+                               ng-click="setTab(0)"
                                href="#/edit/{{object.artwork_id}}"><b>Edit</b></a>
                             <a class="button button-positive"
+                               ng-click="setTab(0)"
                                href="#/imedit/{{object.artwork_id}}">Manage Images</a>
                         </div>
                 </ion-list>
@@ -38,7 +40,7 @@
         <ion-tab title="About" icon="ion-map">
             <ion-header-bar align-title="center" class="bar-stable">
                 <div class="buttons">
-                    <a class="button" href="#/edit/-1">New</a>
+                    <a class="button" href="#/touredit/-1">New</a>
                     <button class="button" ng-click="showDel=!showDel;showOps=false">Delete</button>
                 </div>
                 <h1 class="title">Tours</h1>
@@ -59,15 +61,14 @@
                         </ion-item>
                         <div ng-repeat-end class="button-bar" ng-show="showTourOps && $index==opTourIndex && !showDel">
                             <a class="button button-stable"
-                               href="#/edit/{{tour.tour_id}}"><b>Edit</b></a>
+                               ng-click="setTab(1)"
+                               href="#/touredit/{{tour.tour_id}}"><b>Edit</b></a>
                             <a class="button button-positive"
-                               href="#/artincedit/{{tour.tour_id}}">Manage Images</a>
+                               ng-click="setTab(1)"
+                               href="#/artincedit/{{tour.tour_id}}">Manage Artwork</a>
                         </div>
                 </ion-list>
             </ion-content>
         </ion-tab>
-
     </ion-tabs>
-    
-    
 </ion-view>

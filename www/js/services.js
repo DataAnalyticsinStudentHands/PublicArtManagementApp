@@ -6,6 +6,8 @@ angular.module('starter.services', [])
 
 .factory('UtilFactory', function(){
     
+    var tab = 0;
+    
     return {
         
         tagsToStr: function(tagsList){
@@ -35,6 +37,14 @@ angular.module('starter.services', [])
             }
             
             return false;
+        },
+        getTab: function(){
+            
+            return tab;
+        },
+        setTab: function(input){
+            
+            tab = input;
         }
     }
 })
@@ -44,6 +54,7 @@ angular.module('starter.services', [])
     var artObjects = {};
     var tours = {}
     var needUpdate = false;
+    var needTourUpdate = false;
     
     this.loadObjects = function(){
         
@@ -51,18 +62,6 @@ angular.module('starter.services', [])
         testProm.then(function(success){
         
             artObjects = success;
-            
-//            for(var i=0;i<artObjects.length;i++){
-//                
-//                if(artObjects[i].date_made && artObjects[i].date_made){
-//                    
-//                    var dob = (new Date(artObjects[i].artist_dob));
-//                    var made = (new Date(artObjects[i].date_made));
-//                    
-//                    artObjects[i].date_made = made.getFullYear()+"/"+made.getMonth()+"/"+made.getDate();
-//                    artObjects[i].artist_dob = dob.getFullYear()+"/"+dob.getMonth()+"/"+dob.getDate();
-//                }
-//            }
             
             needUpdate = false;
         },
@@ -138,7 +137,7 @@ angular.module('starter.services', [])
                 }
             });
             
-            needUpdate = false;
+            needTourUpdate = false;
         },
         function(error){
             
@@ -167,7 +166,7 @@ angular.module('starter.services', [])
     
     this.updateTourById = function(tourIn){
         
-        needUpdate = true;
+        needTourUpdate = true;
         
         tourIn.artwork_included = UtilFactory.tagsToStr(tourIn.artwork_included);
         
@@ -176,12 +175,22 @@ angular.module('starter.services', [])
     
     this.addTour = function(tour){
         
-        needUpdate = true;
+        needTourUpdate = true;
         return Restangular.all('tours').post(tour);
     }
     
     this.deleteTourById = function(id){
         
         Restangular.all('tours').all(id).remove();
+    }
+    
+    this.needTourUpdate = function(){
+        
+        return needTourUpdate;
+    }
+    
+    this.setNeedTourUpdate = function(need){
+        
+        needTourUpdate = need;
     }
 });
