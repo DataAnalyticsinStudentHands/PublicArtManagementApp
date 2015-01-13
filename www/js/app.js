@@ -44,40 +44,71 @@ angular.module('starter', ['ionic',
         controller: 'LoginCtrl',
         authenticate: false
     })
-
-    .state('main', {
-        url: '/main',
-        templateUrl: 'templates/main.html',
-        controller: 'MainCtrl',
-        authenticate: true
+    
+    .state('tab', {
+        url: "/tab",
+        abstract: true,
+        templateUrl: "templates/tabs.html"
     })
     
-    .state('edit', {
+    .state('tab.artwork', {
+        url: '/artwork',
+        views: {
+            'tab-artwork': {
+                templateUrl: 'templates/artwork.html',
+                controller: 'ArtworkCtrl'
+            }
+        }
+    })
+    
+    .state('tab.tours', {
+        url: '/tours',
+        views: {
+            'tab-tours': {
+                templateUrl: 'templates/tours.html',
+                controller: 'ToursCtrl'
+            }
+        }
+    })
+    
+    .state('tab.artwork-edit', {
         url: '/edit/:objectId',
-        templateUrl: 'templates/tab-dash.html',
-        controller: 'DashCtrl',
-        authenticate: true
+        views: {
+            'tab-artwork': {
+                templateUrl: 'templates/tab-dash.html',
+                controller: 'DashCtrl'
+            }
+        }
     })
     
-    .state('imedit', {
-        url:'/imedit/:objectId',
-        templateUrl: 'templates/imedit.html',
-        controller: 'ImageCtrl',
-        authenticate: true
+    .state('tab.artwork-imedit', {
+        url: '/imedit/:objectId',
+        views: {
+            'tab-artwork': {
+                templateUrl: 'templates/imedit.html',
+                controller: 'ImageCtrl'
+            }
+        }
     })
     
-    .state('artincedit', {
-        url:'/artincedit/:tourId',
-        templateUrl: 'templates/artincedit.html',
-        controller: 'ArtIncCtrl',
-        authenticate: true
+    .state('tab.tour-build', {
+        url: '/artincedit/:tourId',
+        views: {
+            'tab-tours': {
+                templateUrl: 'templates/artincedit.html',
+                controller: 'ArtIncCtrl'
+            }
+        }
     })
     
-    .state('touredit', {
-        url:'/touredit/:tourId',
-        templateUrl: 'templates/touredit.html',
-        controller: 'TourEditCtrl',
-        authenticate: true
+    .state('tab.tour-edit', {
+        url: '/touredit/:tourId',
+        views: {
+            'tab-tours': {
+                templateUrl: 'templates/touredit.html',
+                controller: 'TourEditCtrl'
+            }
+        }
     })
     
     // if none of the above states are matched, use this as the fallback

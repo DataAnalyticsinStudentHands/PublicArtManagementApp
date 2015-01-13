@@ -1,0 +1,31 @@
+<ion-view title="Tours">
+    <ion-header-bar align-title="center" class="bar-stable">
+        <div class="buttons">
+            <a class="button" ui-sref='tab.tour-edit({tourId: -1})'>New</a>
+            <button class="button" ng-click="showDel=!showDel;showOps=false">Delete</button>
+        </div>
+        <h1 class="title">Tours</h1>
+        <div class="buttons">
+            <button class="button" ng-click="logOut()">Log Out</button>
+        </div>
+    </ion-header-bar>
+
+    <ion-content class="padding" delegate-handle="toursScroll">
+        <ion-list show-delete="showDel">
+                <ion-item ng-repeat-start="tour in tours" class="item" 
+                          type="item-text-wrap"
+                          ng-click="toggleTourOps($index);resizeScroll();">
+                    <ion-delete-button class="ion-minus-circled"
+                                    ng-click="confirmTourDelete(tour.tour_title,tour.tour_id,$index)">
+                    </ion-delete-button>
+                    <b>{{tour.tour_title}}</b>
+                </ion-item>
+                <div ng-repeat-end class="button-bar" ng-show="showTourOps && $index==opTourIndex && !showDel">
+                    <a class="button button-stable"
+                       ui-sref='tab.tour-edit({tourId: {{tour.tour_id}}})'><b>Edit</b></a>
+                    <a class="button button-positive"
+                       ui-sref='tab.tour-build({tourId: {{tour.tour_id}}})'>Manage Artwork</a>
+                </div>
+        </ion-list>
+    </ion-content>
+</ion-view>

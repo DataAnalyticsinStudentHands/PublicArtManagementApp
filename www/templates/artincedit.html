@@ -1,11 +1,13 @@
 <ion-view title="ArtIncEdit">
-    <ion-nav-bar align-title="center" class="bar-stable">
+    <ion-header-bar align-title="center" class="bar-stable">
         <div class="buttons">
-            <button class="button" ng-click="showDel=!showDel;showReorder=false;">Delete</button>
-            <button class="button" ng-click="showReorder=!showReorder;showDel=false;">Reorder</button>
+            <a class="button icon ion-arrow-swap button-clear button-dark"
+               ng-click="showDel=!showDel;showReorder=false;"></a>
+            <a class="button icon ion-shuffle button-clear button-dark"
+               ng-click="showReorder=!showReorder;showDel=false;"></a>
         </div>
         <h1 class="title">{{tour.tour_title}}</h1>
-    </ion-nav-bar>
+    </ion-header-bar>
     
     <ion-content>
         <ion-list show-reorder="showReorder" show-delete="showDel">
@@ -34,7 +36,7 @@
     <ion-footer-bar class="bar-stable">
         <div class="buttons">
             <button class="button button-positive" ng-click="onSubmit()">Submit</button>
-            <a class="button button-stable" ng-click="goBack()">Cancel</a>
+            <a class="button button-stable" ui-sref="tab.tours">Cancel</a>
         </div>
     </ion-footer-bar>
 </ion-view>

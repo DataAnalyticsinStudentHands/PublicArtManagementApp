@@ -346,7 +346,7 @@ angular.module('starter.controllers', [])
         DBService.updateTourById(Restangular.stripRestangular($scope.tour)).then(function(res){
 
             // Add ngNotify at some point
-            $state.go('main');
+            $state.go('tab.tours');
         });
     }
     
@@ -361,7 +361,7 @@ angular.module('starter.controllers', [])
 
     if($scope.isAuthenticated() === true) {
          //IF SUCCESSFULLY AUTH-ED USER IS TRYING TO GO TO LOGIN PAGE => SEND TO HOME PAGE OF APP
-         $state.go('main');
+         $state.go('tab.artwork');
     }
     else{
         
@@ -385,7 +385,7 @@ angular.module('starter.controllers', [])
                     $scope.loginMsg = "You have logged in successfully!";
                     Auth.confirmCredentials();
                     //$state.go("main", {}, {reload: true});
-                     $state.go("main");
+                     $state.go("tab");
                     //ngNotify.set($scope.loginMsg, 'success');
                     $ionicLoading.hide();
                  }, function(error) {
@@ -401,159 +401,6 @@ angular.module('starter.controllers', [])
          }
      };
 
-})
-
-.controller('MainCtrl', function($scope, Auth, $state, $ionicPopup, DBService, $ionicScrollDelegate, $ionicTabsDelegate, $stateParams, $timeout, UtilFactory){
-    
-    $scope.showDel = false;
-    $scope.showOps = false;
-    $scope.showTourOps = false;
-    $scope.opIndex = -1;
-    $scope.opTourIndex = -1;
-    $scope.setTab = UtilFactory.setTab;
-    
-    $timeout(function(){
-        $ionicTabsDelegate.$getByHandle('main-tabs').select(UtilFactory.getTab());
-    },50);
-    
-    var obs = DBService.getObjects();
-    var obsTour = DBService.getTours();
-    
-    if(obs.length!=null && obs.length!=0 && !DBService.needUpdate()){
-        
-        $scope.artObjects = DBService.getObjects();
-    }
-    else{
-        
-        DBService.loadObjects().then(function(success){
-            
-            $scope.artObjects = success;
-            DBService.setNeedUpdate(false);
-        },
-        function(fail){
-            
-            
-        });
-    }
-    
-    if(obsTour.length!=null && obsTour.length!=0 && !DBService.needTourUpdate()){
-        
-        $scope.tours = DBService.getTours();
-    }
-    else{
-        
-        DBService.loadTours().then(function(success){
-            
-            $scope.tours = success;
-            DBService.setNeedTourUpdate(false);
-        },
-        function(fail){
-            
-            
-        });
-    }
-    
-    $scope.confirmDelete = function(inTitle,id,index){
-        
-        $scope.data = {}
-
-        // An elaborate, custom popup
-        var myPopup = $ionicPopup.confirm({
-            template: 'Delete \"'+inTitle+'?\"',
-            title: 'Confirm Deletion'
-        });
-
-        myPopup.then(function(res){
-            
-            if(res){
-                
-                DBService.deleteById(id);
-                
-                $scope.artObjects.splice(index,1);
-            }
-            else{
-                
-                console.log(inTitle+" not deleted!");
-            }
-        });
-    }
-    
-    $scope.confirmTourDelete = function(inTitle,id,index){
-        
-        $scope.data = {}
-
-        // An elaborate, custom popup
-        var myPopup = $ionicPopup.confirm({
-            template: 'Delete \"'+inTitle+'?\"',
-            title: 'Confirm Deletion'
-        });
-
-        myPopup.then(function(res){
-            
-            if(res){
-                
-                DBService.deleteTourById(id);
-                
-                $scope.tours.splice(index,1);
-            }
-            else{
-                
-                console.log(inTitle+" not deleted!");
-            }
-        });
-    }
-    
-    $scope.logOut = function(){
-        
-        Auth.clearCredentials();
-        $state.go('login');
-    }
-    
-    $scope.toggleOps = function(newInd){
-        
-        if(newInd == $scope.opIndex){
-            
-            $scope.showOps = !$scope.showOps;
-        }
-        else{
-            
-            $scope.showOps = true;
-            $scope.opIndex = newInd;
-        }
-    }
-    
-    $scope.toggleTourOps = function(newInd){
-        
-        if(newInd == $scope.opTourIndex){
-            
-            $scope.showTourOps = !$scope.showTourOps;
-        }
-        else{
-            
-            $scope.showTourOps = true;
-            $scope.opTourIndex = newInd;
-        }
-    }
-    
-    $scope.getImg = function(index){
-        
-        var firstImg = $scope.artObjects[index].image.split(",")[0];
-        
-        if(firstImg!=null && firstImg!=''){
-            
-            return "http://www.housuggest.org/images/ARtour/"+$scope.artObjects[index].artwork_id+"/"+firstImg;
-        }
-        else{
-            
-            return "img/test_sloth_2.jpg";
-        }
-    }
-    
-    $scope.resizeScroll = function(){
-        $ionicScrollDelegate.$getByHandle('mainScroll').resize();
-    }
-    
-    
 })
 
 .controller('ImageCtrl', function($filter, $scope, $state, DBService, UtilFactory, $stateParams, $ionicPopup, $http, Restangular, $upload, $timeout){
@@ -661,7 +508,7 @@ angular.module('starter.controllers', [])
         DBService.updateById(Restangular.stripRestangular($scope.artOb)).then(function(res){
             
             // Add ngNotify at some point
-            $state.go('main');
+            $state.go('tab.artwork');
         });
         
         // Delete images marked for removal
@@ -675,7 +522,7 @@ angular.module('starter.controllers', [])
             DBService.deleteImage($stateParams.objectId,filename);
         }
         
-        $state.go('main');
+        $state.go('tab.artwork');
     }
     
     
@@ -809,6 +656,187 @@ angular.module('starter.controllers', [])
     /***********************************
     ***** TERRY APP RIP PART 2 END *****
     ***********************************/
+})
+
+.controller('ArtworkCtrl', function($filter, $scope, $state, DBService, UtilFactory, $stateParams, $ionicPopup, $http, Restangular, $upload, $timeout, $ionicNavBarDelegate, $ionicScrollDelegate){
+    
+    $scope.showDel = false;
+    $scope.showOps = false;
+    $scope.opIndex = -1;
+    
+    var obs = DBService.getObjects();
+    
+    if(obs.length!=null && obs.length!=0 && !DBService.needUpdate()){
+        
+        $scope.artObjects = DBService.getObjects();
+    }
+    else{
+        
+        DBService.loadObjects().then(function(success){
+            
+            $scope.artObjects = success;
+            DBService.setNeedUpdate(false);
+        },
+        function(fail){
+            
+            console.log("FAILURE");
+        });
+    }
+    
+    $scope.confirmDelete = function(inTitle,id,index){
+        
+        $scope.data = {}
+
+        // An elaborate, custom popup
+        var myPopup = $ionicPopup.confirm({
+            template: 'Delete \"'+inTitle+'?\"',
+            title: 'Confirm Deletion'
+        });
+
+        myPopup.then(function(res){
+            
+            if(res){
+                
+                DBService.deleteById(id);
+                
+                $scope.artObjects.splice(index,1);
+            }
+            else{
+                
+                console.log(inTitle+" not deleted!");
+            }
+        });
+    }
+    
+    $scope.logOut = function(){
+        
+        Auth.clearCredentials();
+        $state.go('login');
+    }
+    
+    $scope.toggleOps = function(newInd){
+        
+        if(newInd == $scope.opIndex){
+            
+            $scope.showOps = !$scope.showOps;
+        }
+        else{
+            
+            $scope.showOps = true;
+            $scope.opIndex = newInd;
+        }
+    }
+    
+    $scope.getImg = function(index){
+        
+        var firstImg = $scope.artObjects[index].image.split(",")[0];
+        
+        if(firstImg!=null && firstImg!=''){
+            
+            return "http://www.housuggest.org/images/ARtour/"+$scope.artObjects[index].artwork_id+"/"+firstImg;
+        }
+        else{
+            
+            return "img/test_sloth_2.jpg";
+        }
+    }
+    
+    $scope.resizeScroll = function(){
+        $ionicScrollDelegate.$getByHandle('artworkScroll').resize();
+    }
+})
+
+.controller('ToursCtrl', function($filter, $scope, $state, DBService, UtilFactory, $stateParams, $ionicPopup, $http, Restangular, $upload, $timeout, $ionicNavBarDelegate, $ionicScrollDelegate){
+    
+    $scope.showDel = false;
+    $scope.showOps = false;
+    $scope.opTourIndex = -1;
+    
+    var obs = DBService.getObjects();
+    
+    if(obs.length!=null && obs.length!=0 && !DBService.needUpdate()){
+        
+        $scope.artObjects = DBService.getObjects();
+    }
+    else{
+        
+        DBService.loadObjects().then(function(success){
+            
+            $scope.artObjects = success;
+            DBService.setNeedUpdate(false);
+        },
+        function(fail){
+            
+            
+        });
+    }
+    
+    var obsTour = DBService.getTours();
+    
+    if(obsTour.length!=null && obsTour.length!=0 && !DBService.needTourUpdate()){
+        
+        $scope.tours = DBService.getTours();
+    }
+    else{
+        
+        DBService.loadTours().then(function(success){
+            
+            $scope.tours = success;
+            DBService.setNeedTourUpdate(false);
+        },
+        function(fail){
+            
+            
+        });
+    }
+    
+    $scope.confirmTourDelete = function(inTitle,id,index){
+        
+        $scope.data = {}
+
+        // An elaborate, custom popup
+        var myPopup = $ionicPopup.confirm({
+            template: 'Delete \"'+inTitle+'?\"',
+            title: 'Confirm Deletion'
+        });
+
+        myPopup.then(function(res){
+            
+            if(res){
+                
+                DBService.deleteTourById(id);
+                
+                $scope.tours.splice(index,1);
+            }
+            else{
+                
+                console.log(inTitle+" not deleted!");
+            }
+        });
+    }
+    
+    $scope.logOut = function(){
+        
+        Auth.clearCredentials();
+        $state.go('login');
+    }
+    
+    $scope.toggleTourOps = function(newInd){
+        
+        if(newInd == $scope.opTourIndex){
+            
+            $scope.showTourOps = !$scope.showTourOps;
+        }
+        else{
+            
+            $scope.showTourOps = true;
+            $scope.opTourIndex = newInd;
+        }
+    }
+    
+    $scope.resizeScroll = function(){
+        $ionicScrollDelegate.$getByHandle('toursScroll').resize();
+    }
 })
 
 // Nested in DashCtrl

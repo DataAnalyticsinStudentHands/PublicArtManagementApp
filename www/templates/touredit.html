@@ -1,10 +1,10 @@
 <ion-view title="TourEdit">
-    <ion-nav-bar align-title="center" class="bar-stable">
+    <ion-header-bar align-title="center" class="bar-stable">
         <div class="buttons">
-            <a class="button" ng-click="goBack()">Back</a>
+            <a class="button" ui-sref="tab.tours">Back</a>
         </div>
         <h1 class="title">{{tour.tour_title ? tour.tour_title : "New Tour"}}</h1>
-    </ion-nav-bar>
+    </ion-header-bar>
     
     <ion-content class="padding" delegate-handle="tourEditScroll">   
         
