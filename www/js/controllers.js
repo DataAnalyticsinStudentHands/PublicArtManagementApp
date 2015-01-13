@@ -272,10 +272,8 @@ angular.module('starter.controllers', [])
     $scope.tour = DBService.getTourById($stateParams.tourId);
     $scope.artwork = DBService.getObjects();
     $scope.showReorder = false;
-    $scope.showDel = false;
     
     $scope.includedArr = [];
-    $scope.excludedArr = [];
     $scope.selectedArr = [];
     
     for(var i=0;i<$scope.artwork.length;i++){
@@ -296,63 +294,59 @@ angular.module('starter.controllers', [])
         }
     }
     
-    for(var i=0;i<$scope.artwork.length;i++){
+    $scope.moveItem = function(item, fromInd, toInd){
         
-        var shouldCont = false;
+        $scope.includedArr.splice(fromInd, 1);
+        $scope.includedArr.splice(toInd, 0, item);
+    }
+    
+    $scope.toggleArtwork = function(ind){
         
-        for(var j=0;j<$scope.includedArr.length;j++){
+        if($scope.selectedArr[ind]){
             
-            if($scope.artwork[i].artwork_id==$scope.includedArr[j].artwork_id){
-                
-                shouldCont = true;
-                break;
+            var incInd = null;
+        
+            $scope.selectedArr[ind] = false;
+
+            for(var i=0;i<$scope.includedArr.length;i++){
+
+                if($scope.artwork[ind].artwork_id == $scope.includedArr[i].artwork_id){
+
+                    incInd = i;
+                    break;
+                }
             }
-        }
-        
-        if(shouldCont){
-            
-            continue;
+
+            if(incInd!=null){
+                $scope.includedArr.splice(incInd,1);
+            }
         }
         else{
             
-            $scope.excludedArr.push($scope.artwork[i]);
+            $scope.selectedArr[ind] = true;
+            $scope.includedArr.push($scope.artwork[ind]);
         }
-    }
-    
-    $scope.moveItem = function(item, fromInd, toInd){
-        
-        $scope.includedArr.splice(fromInd-1, 1);
-        $scope.includedArr.splice(toInd-1, 0, item);
     }
     
     $scope.removeArtwork = function(ind){
         
-        //$scope.excludedArr.splice(0, 0, $scope.includedArr[ind]);
-        
         var incInd = null;
-        
-        $scope.selectedArr[ind] = false;
-        
-        for(var i=0;i<$scope.includedArr.length;i++){
-            
-            if($scope.artwork[ind].artwork_id == $scope.includedArr[i].artwork_id){
-                
+
+        for(var i=0;i<$scope.artwork.length;i++){
+
+            if($scope.artwork[i].artwork_id == $scope.includedArr[ind].artwork_id){
+
                 incInd = i;
                 break;
             }
         }
-        
+
         if(incInd!=null){
-            $scope.includedArr.splice(incInd,1);
+            $scope.selectedArr[incInd] = false;
         }
-    }
-    
-    $scope.addArtwork = function(ind){
         
-        $scope.selectedArr[ind] = true;
-        $scope.includedArr.push($scope.artwork[ind]);
+        $scope.includedArr.splice(ind,1);
     }
-    
     
     $scope.onSubmit = function(){
         
@@ -370,11 +364,6 @@ angular.module('starter.controllers', [])
             // Add ngNotify at some point
             $state.go('tab.tours');
         });
-    }
-    
-    $scope.goBack = function(){
-        
-        $ionicNavBarDelegate.back()
     }
 })
 
@@ -407,7 +396,7 @@ angular.module('starter.controllers', [])
                     $scope.loginMsg = "You have logged in successfully!";
                     Auth.confirmCredentials();
                     //$state.go("main", {}, {reload: true});
-                     $state.go("tab");
+                     $state.go("tab.artwork");
                     //ngNotify.set($scope.loginMsg, 'success');
                     $ionicLoading.hide();
                  }, function(error) {
@@ -680,7 +669,7 @@ angular.module('starter.controllers', [])
     ***********************************/
 })
 
-.controller('ArtworkCtrl', function($filter, $scope, $state, DBService, UtilFactory, $stateParams, $ionicPopup, $http, Restangular, $upload, $timeout, $ionicNavBarDelegate, $ionicScrollDelegate){
+.controller('ArtworkCtrl', function($filter, $scope, $state, DBService, UtilFactory, $stateParams, $ionicPopup, $http, Restangular, $upload, $timeout, $ionicNavBarDelegate, $ionicScrollDelegate, Auth){
     
     $scope.showDel = false;
     $scope.showOps = false;

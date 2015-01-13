@@ -58,7 +58,8 @@ angular.module('starter', ['ionic',
                 templateUrl: 'templates/artwork.html',
                 controller: 'ArtworkCtrl'
             }
-        }
+        },
+        authenticate: true
     })
     
     .state('tab.tours', {
@@ -68,7 +69,8 @@ angular.module('starter', ['ionic',
                 templateUrl: 'templates/tours.html',
                 controller: 'ToursCtrl'
             }
-        }
+        },
+        authenticate: true
     })
     
     .state('tab.artwork-edit', {
@@ -78,7 +80,8 @@ angular.module('starter', ['ionic',
                 templateUrl: 'templates/tab-dash.html',
                 controller: 'DashCtrl'
             }
-        }
+        },
+        authenticate: true
     })
     
     .state('tab.artwork-imedit', {
@@ -88,7 +91,8 @@ angular.module('starter', ['ionic',
                 templateUrl: 'templates/imedit.html',
                 controller: 'ImageCtrl'
             }
-        }
+        },
+        authenticate: true
     })
     
     .state('tab.tour-build', {
@@ -98,7 +102,8 @@ angular.module('starter', ['ionic',
                 templateUrl: 'templates/artincedit.html',
                 controller: 'ArtIncCtrl'
             }
-        }
+        },
+        authenticate: true
     })
     
     .state('tab.tour-edit', {
@@ -108,7 +113,8 @@ angular.module('starter', ['ionic',
                 templateUrl: 'templates/touredit.html',
                 controller: 'TourEditCtrl'
             }
-        }
+        },
+        authenticate: true
     })
     
     // if none of the above states are matched, use this as the fallback
@@ -118,8 +124,8 @@ angular.module('starter', ['ionic',
 
 .run(['Restangular', '$rootScope', '$state', 'Auth', function(Restangular, $rootScope, $state, Auth) {
 
-    Restangular.setBaseUrl("http://localhost:8080/ArtApp/"); //Local Host
-    //Restangular.setBaseUrl("http://www.housuggest.org:8080/ArtApp/"); //DASH Server
+    //Restangular.setBaseUrl("http://localhost:8080/ArtApp/"); //Local Host
+    Restangular.setBaseUrl("http://www.housuggest.org:8080/ArtApp/"); //DASH Server
     
     //TO ACCESS RESTANGULAR IN CONTROLLERS WITHOUT INJECTION
     $rootScope.Restangular = function() {
