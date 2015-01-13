@@ -276,6 +276,12 @@ angular.module('starter.controllers', [])
     
     $scope.includedArr = [];
     $scope.excludedArr = [];
+    $scope.selectedArr = [];
+    
+    for(var i=0;i<$scope.artwork.length;i++){
+        
+        $scope.selectedArr[i] = false;
+    }
     
     for(var i=0;i<$scope.tour.artwork_included.length;i++){
         
@@ -284,6 +290,7 @@ angular.module('starter.controllers', [])
             if($scope.artwork[j].artwork_id.toString()==$scope.tour.artwork_included[i]){
                 
                 $scope.includedArr.push($scope.artwork[j]);
+                $scope.selectedArr[j] = true;
                 break;
             }
         }
@@ -318,17 +325,32 @@ angular.module('starter.controllers', [])
         $scope.includedArr.splice(toInd-1, 0, item);
     }
     
-    $scope.confirmDelete = function(ind){
+    $scope.removeArtwork = function(ind){
         
-        //$scope.excludedArr.push($scope.includedArr[ind]);
-        $scope.excludedArr.splice(0, 0, $scope.includedArr[ind]);
-        $scope.includedArr.splice(ind,1);
+        //$scope.excludedArr.splice(0, 0, $scope.includedArr[ind]);
+        
+        var incInd = null;
+        
+        $scope.selectedArr[ind] = false;
+        
+        for(var i=0;i<$scope.includedArr.length;i++){
+            
+            if($scope.artwork[ind].artwork_id == $scope.includedArr[i].artwork_id){
+                
+                incInd = i;
+                break;
+            }
+        }
+        
+        if(incInd!=null){
+            $scope.includedArr.splice(incInd,1);
+        }
     }
     
-    $scope.confirmUndelete = function(ind){
+    $scope.addArtwork = function(ind){
         
-        $scope.includedArr.push($scope.excludedArr[ind]);
-        $scope.excludedArr.splice(ind,1);
+        $scope.selectedArr[ind] = true;
+        $scope.includedArr.push($scope.artwork[ind]);
     }
     
     

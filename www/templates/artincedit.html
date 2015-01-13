@@ -1,36 +1,38 @@
 <ion-view title="ArtIncEdit">
     <ion-header-bar align-title="center" class="bar-stable">
         <div class="buttons">
-            <a class="button icon ion-arrow-swap button-clear button-dark"
-               ng-click="showDel=!showDel;showReorder=false;"></a>
             <a class="button icon ion-shuffle button-clear button-dark"
                ng-click="showReorder=!showReorder;showDel=false;"></a>
         </div>
-        <h1 class="title">{{tour.tour_title}}</h1>
+        <h1 class="title">Tour: {{tour.tour_title}}</h1>
     </ion-header-bar>
     
     <ion-content>
-        <ion-list show-reorder="showReorder" show-delete="showDel">
-            <ion-item class="item-divider">Included</ion-item>
-            <ion-item class="item-thumbnail-left" ng-repeat="art in includedArr track by $index">
-                <img ng-src='http://www.housuggest.org/images/ARtour/{{art.artwork_id}}/{{art.image.split(",")[0]}}'>
-                {{art.title}}
-                <ion-reorder-button class="ion-navicon"
-                        on-reorder="moveItem(art, $fromIndex, $toIndex)">
-                </ion-reorder-button>
-                <ion-delete-button class="ion-minus-circled"
-                                   ng-click="confirmDelete($index)">
-                </ion-delete-button>
-            </ion-item>
-            <ion-item class="item-divider">Excluded</ion-item>
-            <ion-item class="item-thumbnail-left" ng-repeat="art in excludedArr track by $index">
-                <img ng-src='http://www.housuggest.org/images/ARtour/{{art.artwork_id}}/{{art.image.split(",")[0]}}'>
-                {{art.title}}
-                <ion-delete-button class="ion-plus-circled"
-                                   ng-click="confirmUndelete($index)">
-                </ion-delete-button>
-            </ion-item>
-        </ion-list>
+        <div class="row">
+            <ion-list class="col col-50" show-reorder="showReorder">
+                <ion-item class="item-divider">Tour Builder</ion-item>
+                <ion-item class="item-thumbnail-left" ng-repeat="art in includedArr track by $index">
+                    <img ng-src='http://www.housuggest.org/images/ARtour/{{art.artwork_id}}/{{art.image.split(",")[0]}}'>
+                    {{art.title}}
+                    <ion-reorder-button class="ion-navicon"
+                            on-reorder="moveItem(art, $fromIndex, $toIndex)">
+                    </ion-reorder-button>
+                </ion-item>
+            </ion-list>   
+            <ion-list class="col col-50">
+                <ion-item class="item-divider">All Artwork</ion-item>
+                <ion-item class="item-thumbnail-left item-button-right" ng-repeat="art in artwork track by $index">
+                    <img ng-src='http://www.housuggest.org/images/ARtour/{{art.artwork_id}}/{{art.image.split(",")[0]}}'>
+                    {{art.title}}
+                    <button class="button button-clear button-dark" ng-click="addArtwork($index)" ng-hide="selectedArr[$index]">
+                      <i class="icon ion-record"></i>
+                    </button>
+                    <button class="button button-clear button-dark" ng-click="removeArtwork($index)" ng-show="selectedArr[$index]">
+                        <i class="icon ion-checkmark-circled"></i>
+                    </button>
+                </ion-item>
+            </ion-list>
+        </div>
     </ion-content>
     
     <ion-footer-bar class="bar-stable">
