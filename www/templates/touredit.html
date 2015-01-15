@@ -29,7 +29,12 @@
                 </label>
                 <label class="item item-input">
                   <span class="input-label">Date Created:</span>
-                  <input type="text" ng-model="tour.date_created" name="date_created" required/>
+                  <input type="text"
+                         ng-model="tour.date_created"
+                         name="date_created"
+                         ng-pattern='/^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/'
+                         placeholder="yyyy-mm-dd"
+                         required/>
                 </label>
                 <label class="item item-input">
                   <span class="input-label">Artistic Attributes:</span>

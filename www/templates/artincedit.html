@@ -4,6 +4,9 @@
             <a class="button button-stable" ui-sref="tab.tours">Back</a>
         </div>
         <h1 class="title">Tour: {{tour.tour_title}}</h1>
+        <div class="buttons">
+            <button class="button button-positive" ng-click="onSubmit()">Submit</button>
+        </div>
     </ion-header-bar>
     
     <ion-content>
@@ -15,7 +18,7 @@
                 <ion-list show-reorder="showReorder">
                     <ion-item class="item-thumbnail-left" ng-repeat="art in includedArr track by $index" ng-click="removeArtwork($index)">
                         <img ng-src='http://www.housuggest.org/images/ARtour/{{art.artwork_id}}/{{art.image.split(",")[0]}}'>
-                        {{art.title}}
+                        <b>{{art.title}}</b> by {{art.artist_name}}
                         <ion-reorder-button class="ion-navicon"
                                 on-reorder="moveItem(art, $fromIndex, $toIndex)">
                         </ion-reorder-button>
@@ -29,17 +32,11 @@
                 <ion-list>
                     <ion-item class="item-thumbnail-left item-icon-right" ng-repeat="art in artwork track by $index" ng-click="toggleArtwork($index)">
                         <img ng-src='http://www.housuggest.org/images/ARtour/{{art.artwork_id}}/{{art.image.split(",")[0]}}'>
-                        {{art.title}}
+                        <b>{{art.title}}</b> by {{art.artist_name}}
                         <i class="icon ion-checkmark" ng-show="selectedArr[$index]"></i>
                     </ion-item>
                 </ion-list>
             </div>
         </div>
     </ion-content>
-    
-    <ion-footer-bar class="bar-stable">
-        <div class="buttons">
-            <button class="button button-positive" ng-click="onSubmit()">Submit</button>
-        </div>
-    </ion-footer-bar>
 </ion-view>

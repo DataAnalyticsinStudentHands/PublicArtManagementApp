@@ -367,7 +367,7 @@ angular.module('starter.controllers', [])
     }
 })
 
-.controller('LoginCtrl', function ($scope, $state, $timeout, $ionicLoading, Auth, DBService) {
+.controller('LoginCtrl', function ($scope, $state, $timeout, $ionicLoading, Auth, DBService, ngNotify) {
 
 
     if($scope.isAuthenticated() === true) {
@@ -400,28 +400,36 @@ angular.module('starter.controllers', [])
                     //ngNotify.set($scope.loginMsg, 'success');
                     $ionicLoading.hide();
                  }, function(error) {
-                    $scope.loginMsg = "Incorrect username or password.";
-                    //ngNotify.set($scope.loginMsg, {position: 'top', type: 'error'});
+                    var loginMsg = "Incorrect username or password.";
+                    ngNotify.set(loginMsg, {position: 'bottom', type: 'error'});
                     Auth.clearCredentials();
                     $ionicLoading.hide();
                  });
              }, 500);
          } else {
-             $scope.loginMsg = "Please enter a username and password.";
-             //ngNotify.set($scope.loginMsg, {position: 'top', type: 'error'});
+             var loginMsg = "Please enter a username and password.";
+             ngNotify.set(loginMsg, {position: 'bottom', type: 'error'});
          }
      };
 
 })
 
-.controller('ImageCtrl', function($filter, $scope, $state, DBService, UtilFactory, $stateParams, $ionicPopup, $http, Restangular, $upload, $timeout){
+.controller('ImageCtrl', function($filter, $scope, $state, DBService, UtilFactory, $stateParams, $ionicPopup, $http, Restangular, $upload, $timeout, $rootScope){
     
     $scope.artOb = {};
     $scope.showReorder = false;
     $scope.showDel = false;
     $scope.artOb = DBService.getById($stateParams.objectId);
     
-    $scope.imageArr = $scope.artOb.image.split(',');
+    if($scope.artOb.image!=""){
+        
+        $scope.imageArr = $scope.artOb.image.split(',');
+    }
+    else{
+        
+        $scope.imageArr = [];
+    }
+    
     $scope.trashArr = [];
     
     $scope.uploadedFileNames = [];
@@ -601,7 +609,7 @@ angular.module('starter.controllers', [])
 
         //$upload.upload()
         $scope.upload[index] = $upload.upload({
-            url: 'http://www.housuggest.org:8080/ArtApp/artobjects/upload?id=' + $stateParams.objectId,
+            url: $rootScope.baseUrl+'artobjects/upload?id=' + $stateParams.objectId,
             data: {
                 myModel: $scope.myModel,
                 errorCode: $scope.generateErrorOnServer && $scope.serverErrorCode,
@@ -641,7 +649,6 @@ angular.module('starter.controllers', [])
         Restangular.all("artobjects").all("upload").remove({"id": $stateParams.objectId, "fileName":  deleteFile}).then(
 
             function (result) {
-                console.log(result);
                 $scope.updateView();
 
             },
@@ -748,7 +755,7 @@ angular.module('starter.controllers', [])
         }
         else{
             
-            return "img/test_sloth_2.jpg";
+            return "img/No_image_available.svg";
         }
     }
     
@@ -757,7 +764,7 @@ angular.module('starter.controllers', [])
     }
 })
 
-.controller('ToursCtrl', function($filter, $scope, $state, DBService, UtilFactory, $stateParams, $ionicPopup, $http, Restangular, $upload, $timeout, $ionicNavBarDelegate, $ionicScrollDelegate){
+.controller('ToursCtrl', function($filter, $scope, $state, DBService, UtilFactory, $stateParams, $ionicPopup, $http, Restangular, $upload, $timeout, $ionicNavBarDelegate, $ionicScrollDelegate, Auth){
     
     $scope.showDel = false;
     $scope.showOps = false;
@@ -851,7 +858,7 @@ angular.module('starter.controllers', [])
 })
 
 // Nested in DashCtrl
-.controller('NewArtCtrl', function($scope,$state,$ionicPopup,$filter,UtilFactory,DBService){ //,ngNotify
+.controller('NewArtCtrl', function($scope,$state,$ionicPopup,$filter,UtilFactory,DBService,ngNotify){
     
     $scope.createArtObject = function (artOb) {
     
@@ -922,7 +929,6 @@ angular.module('starter.controllers', [])
                         type: 'button-positive',
                         onTap: function (e) {
                                 
-                            console.log($scope.artOb);
                             return true;
                         }
                     }
@@ -937,7 +943,7 @@ angular.module('starter.controllers', [])
 //$scope.Restangular().all('artobjects').all($scope.artOb.artwork_id).post($scope.artOb,'',{Authorization:'Basic QWRtaW46dGVzdA=='});
                         DBService.updateById($scope.artOb).then(function(res){
                         
-                            $state.go('main');
+                            $state.go('tab.artwork');
                         });
                     }
                     else{
@@ -945,7 +951,7 @@ angular.module('starter.controllers', [])
                         //$scope.Restangular().all('artobjects').post($scope.artOb,'',{Authorization:'Basic QWRtaW46dGVzdA=='});
                             DBService.addObject($scope.artOb).then(function(res){
                         
-                                $state.go('main');
+                                $state.go('tab.artwork');
                             });
                     
                             //Update client-side list
@@ -970,13 +976,11 @@ angular.module('starter.controllers', [])
                 errorStack.push("Date or Lat/Long format error");
             }
             
-            console.log(errorStack[0]);
-            
             //DON'T FORGET TO RE-ENABLE NOTIFY
-            /*ngNotify.set(errorStack[0], {
+            ngNotify.set(errorStack[0], {
                 position: 'bottom',
                 type: 'error'
-            });*/
+            });
         }
     }
 })
@@ -992,11 +996,13 @@ angular.module('starter.controllers', [])
     }
 })
 
-.controller('NewTourCtrl', function ($scope, UtilFactory, $ionicPopup, $timeout, $filter, $stateParams, DBService, $ionicScrollDelegate, $state) {
+.controller('NewTourCtrl', function ($scope, UtilFactory, $ionicPopup, $timeout, $filter, $stateParams, DBService, $ionicScrollDelegate, $state,ngNotify) {
+    
+    var errorStack = [];
     
     $scope.createTour = function(tour) {
     
-        if(tour.plain){
+        if(tour && tour.plain){
             
             tour = tour.plain();
             $scope.tour = $scope.tour.plain();
@@ -1037,7 +1043,7 @@ angular.module('starter.controllers', [])
 //$scope.Restangular().all('artobjects').all($scope.artOb.artwork_id).post($scope.artOb,'',{Authorization:'Basic QWRtaW46dGVzdA=='});
                         DBService.updateTourById($scope.tour).then(function(res){
                         
-                            $state.go('main');
+                            $state.go('tab.tours');
                         });
                     }
                     else{
@@ -1046,7 +1052,7 @@ angular.module('starter.controllers', [])
                             $scope.tour.artwork_included = "";
                             DBService.addTour($scope.tour).then(function(res){
                         
-                                $state.go('main');
+                                $state.go('tab.tours');
                             });
                     
                             //Update client-side list
@@ -1056,13 +1062,23 @@ angular.module('starter.controllers', [])
         }
         else{
             
-            console.log("Required Field Left Blank");
+            var reqError = $scope.new_tour_form.$error.required;
+            var dateError = $scope.new_tour_form.$error.pattern;
+            
+            if(reqError){
+                
+                errorStack.push("Required textfields left blank");
+            }
+            if(dateError){
+                
+                errorStack.push("Date or Lat/Long format error");
+            }
             
             //DON'T FORGET TO RE-ENABLE NOTIFY
-            /*ngNotify.set(errorStack[0], {
+            ngNotify.set(errorStack[0], {
                 position: 'bottom',
                 type: 'error'
-            });*/
+            });
         }
     }
 });
