@@ -127,6 +127,9 @@ angular.module('starter', ['ionic',
     
     //$rootScope.baseUrl = "http://localhost:8080/ArtApp/";
     $rootScope.baseUrl = "http://www.housuggest.org:8080/ArtApp/";
+    
+    $rootScope.imageURL = "http://www.housuggest.org/images/ARtour/";
+    //$rootScope.imageURL = "/srv/www/htdocs/images/ARtour/"
     Restangular.setBaseUrl($rootScope.baseUrl); //Local Host
     
     //TO ACCESS RESTANGULAR IN CONTROLLERS WITHOUT INJECTION

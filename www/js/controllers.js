@@ -676,7 +676,7 @@ angular.module('starter.controllers', [])
     ***********************************/
 })
 
-.controller('ArtworkCtrl', function($filter, $scope, $state, DBService, UtilFactory, $stateParams, $ionicPopup, $http, Restangular, $upload, $timeout, $ionicNavBarDelegate, $ionicScrollDelegate, Auth){
+.controller('ArtworkCtrl', function($filter, $scope, $state, DBService, UtilFactory, $stateParams, $ionicPopup, $http, Restangular, $upload, $timeout, $ionicNavBarDelegate, $ionicScrollDelegate, Auth, $rootScope){
     
     $scope.showDel = false;
     $scope.showOps = false;
@@ -751,7 +751,7 @@ angular.module('starter.controllers', [])
         
         if(firstImg!=null && firstImg!=''){
             
-            return "http://www.housuggest.org/images/ARtour/"+$scope.artObjects[index].artwork_id+"/"+firstImg;
+            return $rootScope.imageURL+$scope.artObjects[index].artwork_id+"/"+firstImg;
         }
         else{
             
