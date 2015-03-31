@@ -126,7 +126,7 @@ angular.module('starter', ['ionic',
 
     
     //$rootScope.baseUrl = "http://localhost:8080/ArtApp/";
-    $rootScope.baseUrl = "http://www.housuggest.org:8080/ArtApp/";
+    $rootScope.baseUrl = "https://www.housuggest.org:8443/ArtApp/";
     
     $rootScope.imageURL = "http://www.housuggest.org/images/ARtour/";
     //$rootScope.imageURL = "/srv/www/htdocs/images/ARtour/"
